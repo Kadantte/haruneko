@@ -70,6 +70,7 @@ describe('BookmarkConverter', () => {
             { sourceID: 'firstkiss', targetID: 'likemanga' },
             { sourceID: 'flamescans-org', targetID: 'flamecomics' },
             { sourceID: 'gateanimemanga', targetID: 'gatemanga' },
+            { sourceID: 'japanread', targetID: 'bentomanga' },
             { sourceID: 'heavenmanga', targetID: 'beetoon' }, // (future zbulu PR)
             { sourceID: 'heavenmanga2', targetID: 'heavenmanga' }, // (future zbulu PR)
             { sourceID: 'kisscomic', targetID: 'readcomiconline' },

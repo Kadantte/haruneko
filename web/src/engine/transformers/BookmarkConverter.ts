@@ -15,6 +15,7 @@ const legacyWebsiteIdentifierMap = {
     'firstkiss': 'likemanga',
     'flamescans-org': 'flamecomics',
     'gateanimemanga': 'gatemanga',
+    'japanread': 'bentomanga',
     'heavenmanga': 'beetoon', // (future zbulu PR)
     'heavenmanga2': 'heavenmanga', // (future zbulu PR)
     'kisscomic': 'readcomiconline',
