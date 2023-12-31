@@ -9,19 +9,32 @@ type APIMangas = {
 }
 
 const pageScript = `
-    new Promise(resolve => {
-        const id = document.querySelector('div#content').dataset.chapterId;
-        fetch( window.location.origin+'/api/?id='+id+'&type=chapter')
-            .then(response => response.json())
-            .then(data => {
-                const pages = data.page_array.map(page => new URL(data.baseImagesUrl+page, window.location.origin).href);
-                resolve(pages);
-        });
+    new Promise((resolve, reject) => {
+        const intervalID = setInterval(checkforselector, 500);
+        let elapsed = 0;
+
+        function checkforselector()
+        {
+            elapsed += 500;
+            if (elapsed > 120000) reject();
+
+            const element = document.querySelector('div#content');
+            if (!element) return;
+
+            clearInterval(intervalID);
+            const id = element.dataset.chapterId;
+            fetch( window.location.origin+'/api/?id='+id+'&type=chapter')
+                .then(response => response.json())
+                .then(data => {
+                    const pages = data.page_array.map(page => new URL(data.baseImagesUrl+page, window.location.origin).href);
+                    resolve(pages);
+            });
+        }
     });
 `;
 
 @Common.MangaCSS(/^{origin}\/manga\/[^/]+/, 'div.component-manga-title_main h1')
-@Common.PagesSinglePageJS(pageScript, 10000) //doesnt work because of Cloudflare
+@Common.PagesSinglePageJS(pageScript, 500) //doesnt work because of Cloudflare
 @Common.ImageAjax()
 
 export default class extends DecoratableMangaScraper {
