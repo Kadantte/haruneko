@@ -1,7 +1,7 @@
 import { Tags } from '../Tags';
 import icon from './BentoManga.webp';
 import { Chapter, DecoratableMangaScraper, Manga, type MangaPlugin } from '../providers/MangaPlugin';
-import { FetchHTML, FetchJSON, FetchRequest } from '../FetchProvider';
+import { FetchHTML, FetchJSON } from '../platform/FetchProvider';
 import * as Common from './decorators/Common';
 
 type APIMangas = {
@@ -55,7 +55,7 @@ export default class extends DecoratableMangaScraper {
 
             if (page > 0) url.searchParams.set('limit', page.toString());
             url.searchParams.set('cb', Date.now().toString());
-            const request = new FetchRequest(url.href, {
+            const request = new Request(url.href, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     Referrer: this.URI.origin
@@ -77,7 +77,7 @@ export default class extends DecoratableMangaScraper {
 
             if (page > 0) url.searchParams.set('limit', page.toString());
             url.searchParams.set('cb', Date.now().toString());
-            const request = new FetchRequest(url.href, {
+            const request = new Request(url.href, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     Referrer: this.URI.origin
