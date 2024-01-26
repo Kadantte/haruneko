@@ -6,8 +6,8 @@
         "npm": ">=10.2.4"
     },
     "dependencies": {
-        "protobufjs": "^7.2.6",
-        "jszip": "^3.10.1"
+        "jszip": "^3.10.1",
+        "protobufjs": "^7.2.6"
     },
     "devDependencies": {
         "@fluentui/svg-icons": "^1.1.225",
@@ -25,7 +25,6 @@
         "carbon-components-svelte": "^0.82.8",
         "carbon-icons-svelte": "^12.4.2",
         "fuse.js": "^7.0.0",
-        "jest": "^29.7.0",
         "lit": "^3.1.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
@@ -42,7 +41,7 @@
         "update-website-index": "node ./scripts/website-index.mjs",
         "check": "eslint ./src ./test && svelte-check --tsconfig=tsconfig.json --compiler-warnings a11y-click-events-have-key-events:ignore && vue-tsc --skipLibCheck --noEmit",
         "build": "vite build",
-        "test": "jest --detectOpenHandles --config=test/jest.config.js",
+        "test": "vitest --detectOpenHandles --config=test/vitest.config.ts",
         "serve:dev": "vite --port=3000 --strictPort",
         "serve:prod": "npm run build && vite preview --port=5000 --strictPort"
     }
