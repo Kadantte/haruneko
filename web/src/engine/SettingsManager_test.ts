@@ -1,4 +1,4 @@
-import { mock, mockClear, mockFn } from 'jest-mock-extended';
+import { describe, it, expect } from 'vitest';
 import type { HakuNeko } from './HakuNeko';
 import { LocaleID, type EngineResourceKey } from '../i18n/ILocale';
 import { Check, Text, Secret, Numeric, Choice, SettingsManager, Directory, type ISetting, type IValue, type ISettings } from './SettingsManager';

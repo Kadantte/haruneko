@@ -1,4 +1,4 @@
-import { mock } from 'jest-mock-extended';
+import { describe, it, expect } from 'vitest';
 import type { StorageController } from './StorageController';
 import { ItemflagManager } from './ItemflagManager';
 import type { MediaContainer, MediaChild } from './providers/MediaPlugin';

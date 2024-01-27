@@ -1,8 +1,8 @@
 import { inspect } from 'util';
+import { describe, it, expect } from 'vitest';
 import { TaskPool } from './TaskPool';
 import { Priority } from './DeferredTask';
 import { RateLimit, Unlimited } from './RateLimit';
-import { mockFn } from 'jest-mock-extended';
 
 class MockJob<T> {
     constructor(public readonly Priority: Priority, public readonly Duration: number, public readonly Result: T, public readonly Signal?: AbortSignal) {

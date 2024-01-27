@@ -1,4 +1,4 @@
-import { mock } from 'jest-mock-extended';
+import { describe, it, expect } from 'vitest';
 import type { ISettings, SettingsManager } from './SettingsManager';
 import type { StorageController } from './StorageController';
 //import { PluginController } from './PluginController';

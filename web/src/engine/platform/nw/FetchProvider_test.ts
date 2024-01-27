@@ -1,4 +1,4 @@
-import { mock, mockFn } from 'jest-mock-extended';
+import { describe, it, expect } from 'vitest';
 import FetchProvider from './FetchProvider';
 
 class TestFixture {

@@ -1,4 +1,4 @@
-import { mock } from 'jest-mock-extended';
+import { describe, test, expect } from 'vitest';
 import type { HakuNeko } from '../engine/HakuNeko';
 import { Exception, InternalError, NotImplementedError } from './Error';
 import type { Choice, ISettings, SettingsManager } from './SettingsManager';

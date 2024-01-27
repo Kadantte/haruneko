@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { MediaContainer, type MediaItem } from './MediaPlugin';
 
 class MediaContainerMock extends MediaContainer<MediaItem> {

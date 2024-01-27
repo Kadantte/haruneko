@@ -1,4 +1,4 @@
-import { mock, mockFn } from 'jest-mock-extended';
+import { describe, it, expect } from 'vitest';
 import { DownloadManager } from './DownloadManager';
 import type { DownloadTask } from './DownloadTask';
 import { type MediaContainer, StoreableMediaContainer, type MediaChild, type MediaItem } from './providers/MediaPlugin';

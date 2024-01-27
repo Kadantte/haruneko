@@ -1,4 +1,4 @@
-import { mock, mockFn } from 'jest-mock-extended';
+import { describe, it, expect } from 'vitest';
 import { Event } from './Event';
 
 function AssertSubscribeOnce<TSender, TArgs>(testee: Event<TSender, TArgs>): void {

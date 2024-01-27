@@ -1,4 +1,4 @@
-import { mockFn } from 'jest-mock-extended';
+import { describe, it, expect } from 'vitest';
 import { inspect } from 'util';
 import { DeferredTask, Priority } from './DeferredTask';
 
