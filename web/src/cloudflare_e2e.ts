@@ -1,4 +1,5 @@
 import type { Browser, Page } from 'puppeteer-core';
+import { describe, it, expect } from 'vitest';
 
 export class TestFixture {
 
@@ -29,8 +30,6 @@ export class TestFixture {
 
 describe('CloudFlare Bypass', () => {
 
-    jest.setTimeout(20_000);
-
     it('Should bypass JavaScript Challenge', async () => {
 
         const fixture = await new TestFixture().SetupLocation('https://test.cloudscraper.ovh/challenge');
@@ -51,5 +50,5 @@ describe('CloudFlare Bypass', () => {
         } finally {
             fixture.Cleanup();
         }
-    });
+    }, { timeout: 20_000 });
 });
