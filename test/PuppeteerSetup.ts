@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs-extra';
 import { spawn } from 'child_process';
 import * as puppeteer from 'puppeteer-core';
-//import type { Config } from '@jest/types';
 
 const appURL = 'http://localhost:5000/';
 const viteExe = path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'vite.cmd' : 'vite');
