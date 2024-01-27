@@ -29,7 +29,7 @@
     "scripts": {
         "check": "npm run check --workspaces",
         "test": "npm run test --workspaces",
-        "test:e2e": "npm run build --workspaces && vitest --runInBand --config=test/vitest.e2e.js",
-        "test:websites": "npm run build --workspaces && vitest --runInBand --config=test/vitest.websites.js"
+        "test:e2e": "npm run build --workspaces && vitest --config=test/vitest.e2e.ts",
+        "test:websites": "npm run build --workspaces && vitest --config=test/vitest.websites.ts"
     }
 }

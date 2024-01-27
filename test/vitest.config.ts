@@ -3,12 +3,13 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
     test: {
+        watch: false,
         environment: 'node',
         passWithNoTests: true,
-        include: [ '**/*[_.](test|spec).[jt]s(x)?' ],
+        include: [ 'src/**/*[_.](test|spec).[jt]s(x)?' ],
         reporters: [ 'default', 'junit' ],
         outputFile: {
-            junit: './test/junit.xml',
+            junit: './junit.xml',
         },
     },
 });
