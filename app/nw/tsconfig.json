@@ -4,7 +4,7 @@
         "strictFunctionTypes": false,
         "target": "ESNext",
         "module": "ESNext",
-        "moduleResolution": "bundler",
+        "moduleResolution": "Bundler",
         "verbatimModuleSyntax": true,
         "forceConsistentCasingInFileNames": true,
         "strictBindCallApply": true,
