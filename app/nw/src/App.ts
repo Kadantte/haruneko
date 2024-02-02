@@ -10,7 +10,7 @@ async function GetArgumentURL(): Promise<string|undefined> {
             origin?: string;
         }
         */
-        const argv/*: Arguments*/ = await yargs(nw.App.argv).argv;
+        const argv/*: Arguments*/ = await yargs(process.argv).argv;
         return argv.origin as string;
     } catch {
         return undefined;

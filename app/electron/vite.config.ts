@@ -1,11 +1,14 @@
+import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-    //plugins: [],
-    //publicDir: 'public',
     build: {
-        sourcemap: true,
-        outDir: 'build',
-    }
+        ssr: true,
+        emptyOutDir: false,
+        outDir: resolve(__dirname, 'build'),
+        lib: {
+            entry: resolve(__dirname, 'src', 'Main.ts'),
+            formats: [ 'es' ]
+        },
+    },
 });
