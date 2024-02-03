@@ -3,6 +3,7 @@ import { Runtime } from './PlatformInfo';
 import type { JSONObject } from '../../../../node_modules/websocket-rpc/dist/types';
 import { PlatformInstanceActivator } from './PlatformInstanceActivator';
 import NodeWebkitFetchProvider from './nw/FetchProvider';
+import ElectronFetchProvider from './electron/FetchProvider';
 
 export type PreloadAction = (win: typeof window, frame: typeof window) => void;
 
@@ -110,6 +111,7 @@ export interface IFetchProvider {
 export function CreateFetchProvider(): IFetchProvider {
     return new PlatformInstanceActivator<IFetchProvider>()
         .Configure(Runtime.NodeWebkit, () => new NodeWebkitFetchProvider())
+        .Configure(Runtime.Electron, () => new ElectronFetchProvider())
         .Create();
 }
 
