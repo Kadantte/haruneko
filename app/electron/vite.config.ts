@@ -10,5 +10,14 @@ export default defineConfig({
             entry: resolve(__dirname, 'src', 'Main.ts'),
             formats: [ 'es' ]
         },
+        /*
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'Preload': [ 'ipc/Preload' ]
+                }
+            }
+        }
+        */
     },
 });
