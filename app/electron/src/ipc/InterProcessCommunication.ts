@@ -1,5 +1,6 @@
 import type { IPCParameters, IPCPayload, IPCResponse, AppIPC, WebIPC, PlatformIPC, TypeFromInterface } from '../../../../web/src/engine/ipc/InterProcessCommunication';
-import type { RPCServer } from '../rpc/Server';
+import type { RPCServer } from '../../../nw/src/rpc/Server';
+import { ipcMain } from 'electron/main';
 import * as fs from 'node:fs/promises';
 
 /**
@@ -10,7 +11,9 @@ export class IPC implements PlatformIPC {
     public RPC?: RPCServer;
 
     constructor() {
-        chrome.runtime.onMessage.addListener(this.Listen.bind(this));
+        ipcMain.on();
+        ipcRenderer.send();
+        //chrome.runtime.onMessage.addListener(this.Listen.bind(this));
     }
 
     private async Send<R extends IPCResponse>(method: keyof WebIPC, ...parameters: IPCParameters): Promise<R> {

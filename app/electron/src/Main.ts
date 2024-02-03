@@ -1,6 +1,9 @@
 import path from 'path';
 import yargs from 'yargs';
 import { app, BrowserWindow } from 'electron';
+import { RPCServer } from '../../nw/src/rpc/Server';
+import { Contract } from '../../nw/src/rpc/Contract';
+
 async function foo() {
     const _ = await import('./ipc/Preload');
 }
@@ -36,10 +39,8 @@ async function GetURL(): Promise<string> {
 
 function createWindow(url: string) {
 
-    /*
     const ipc = new IPC();
     ipc.RPC = new RPCServer('/hakuneko', new Contract(ipc));
-    */
 
     const win = new BrowserWindow({
         //icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
