@@ -1,6 +1,7 @@
 import { Runtime } from './PlatformInfo';
 import { PlatformInstanceActivator } from './PlatformInstanceActivator';
 import NodeWebkitAppWindow from './nw/AppWindow';
+//import ElectronAppWindow from './electron/AppWindow';
 
 export interface IAppWindow {
     ShowSplash(): Promise<void>;
@@ -15,5 +16,6 @@ export interface IAppWindow {
 export function CreateAppWindow(splashURL: string, useSplash: boolean): IAppWindow {
     return new PlatformInstanceActivator<IAppWindow>()
         .Configure(Runtime.NodeWebkit, () => new NodeWebkitAppWindow(nw.Window.get(), splashURL, useSplash))
+        //.Configure(Runtime.Electron, () => new ElectronAppWindow(splashURL, useSplash))
         .Create();
 }

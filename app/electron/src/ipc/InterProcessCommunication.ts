@@ -1,4 +1,4 @@
-import type { IPCParameters, IPCPayload, IPCResponse, AppIPC, WebIPC, PlatformIPC, TypeFromInterface } from '../../../../web/src/engine/ipc/InterProcessCommunication';
+import type { IPCParameters, IPCPayload, IPCResponse, AppIPC, WebIPC, PlatformIPC, TypeFromInterface } from '../../../../web/src/engine/platform/InterProcessCommunication';
 import type { RPCServer } from '../../../nw/src/rpc/Server';
 import { ipcMain } from 'electron/main';
 import * as fs from 'node:fs/promises';
