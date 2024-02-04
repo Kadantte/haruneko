@@ -6,29 +6,37 @@ export default class implements IAppWindow {
         //
     }
 
-    ShowSplash(): Promise<void> {
+    public async ShowSplash(): Promise<void> {
+        console.debug('Platform::Electron::AppWindow::ShowSplash()');
+        //throw new Error('Method not implemented.');
+    }
+
+    public async HideSplash(): Promise<void> {
+        console.debug('Platform::Electron::AppWindow::HideSplash()');
+        //throw new Error('Method not implemented.');
+    }
+
+    public get HasControls() {
+        return false;
+    }
+
+    public Minimize(): void {
+        console.debug('Platform::Electron::AppWindow::Minimize()');
         throw new Error('Method not implemented.');
     }
 
-    HideSplash(): Promise<void> {
+    public Maximize(): void {
+        console.debug('Platform::Electron::AppWindow::Maximize()');
         throw new Error('Method not implemented.');
     }
 
-    HasControls: boolean;
-
-    Minimize(): void {
+    public Restore(): void {
+        console.debug('Platform::Electron::AppWindow::Restore()');
         throw new Error('Method not implemented.');
     }
 
-    Maximize(): void {
-        throw new Error('Method not implemented.');
-    }
-
-    Restore(): void {
-        throw new Error('Method not implemented.');
-    }
-
-    Close(): void {
+    public Close(): void {
+        console.debug('Platform::Electron::AppWindow::Close()');
         throw new Error('Method not implemented.');
     }
 }

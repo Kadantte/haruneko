@@ -11,8 +11,8 @@ export class IPC implements PlatformIPC {
     public RPC?: RPCServer;
 
     constructor() {
-        ipcMain.on();
-        ipcRenderer.send();
+        //ipcMain.on();
+        //ipcRenderer.send();
         //chrome.runtime.onMessage.addListener(this.Listen.bind(this));
     }
 
@@ -49,6 +49,7 @@ export class IPC implements PlatformIPC {
     }
 
     public async SetCloudFlareBypass(userAgent: string, cookies: TypeFromInterface<chrome.cookies.Cookie>[]): Promise<void> {
+        /*
         for(const cookie of cookies) {
             await chrome.cookies.set({
                 domain: cookie.domain,
@@ -74,6 +75,7 @@ export class IPC implements PlatformIPC {
             // Show 'Restart Application' message
             alert('[I18N] User-Agent ID for CloudFlare Bypass updated, please restart the application to take effect.');
         }
+        */
     }
 
     public async LoadMediaContainerFromURL(url: string) {

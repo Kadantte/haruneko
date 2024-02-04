@@ -7,7 +7,7 @@ export default class implements IFetchProvider {
 
     Initialize(): void {
         console.log('Platform::Electron::FetchProvider::Initialize()');
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
     }
 
     Fetch(request: Request): Promise<Response> {

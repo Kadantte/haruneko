@@ -5,6 +5,7 @@ export default class implements IBloatGuard {
     constructor(private readonly patterns: Array<string>) {}
 
     Initialize(): void {
-        throw new Error('Method not implemented.');
+        console.debug('Platform::Electron::BloatGuard::Initialize()');
+        //throw new Error('Method not implemented.');
     }
 }
