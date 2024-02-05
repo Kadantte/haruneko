@@ -1,7 +1,7 @@
-/*
 import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('IPC', {
-    setTitle: (title) => ipcRenderer.send('set-title', title)
+    invoke: ipcRenderer.invoke,
+    //once: ipcRenderer.once,
+    on: ipcRenderer.on,
 });
-*/

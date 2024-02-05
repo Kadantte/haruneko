@@ -1,7 +1,6 @@
-import type { IPCParameters, IPCPayload, IPCResponse, AppIPC, WebIPC, PlatformIPC, TypeFromInterface } from '../../../../web/src/engine/platform/InterProcessCommunication';
+import type { PlatformIPC, TypeFromInterface } from '../../../../web/src/engine/platform/InterProcessCommunication';
 import type { RPCServer } from '../../../nw/src/rpc/Server';
-import { ipcMain } from 'electron/main';
-import * as fs from 'node:fs/promises';
+import { ipcMain, type BrowserWindow } from 'electron/main';
 
 /**
  * Inter Process Communication for NodeWebkit (background page)
@@ -10,12 +9,13 @@ export class IPC implements PlatformIPC {
 
     public RPC?: RPCServer;
 
-    constructor() {
-        //ipcMain.on();
-        //ipcRenderer.send();
-        //chrome.runtime.onMessage.addListener(this.Listen.bind(this));
+    constructor(private readonly win: BrowserWindow) {
+        ipcMain.handle('StopRPC', (_) => this.StopRPC());
+        ipcMain.handle('RestartRPC', (_, ...args) => this.RestartRPC(args[0], args[1]));
+        ipcMain.handle('SetCloudFlareBypass', (_, ...args) => this.SetCloudFlareBypass(args[0], args[1]));
     }
 
+    /*
     private async Send<R extends IPCResponse>(method: keyof WebIPC, ...parameters: IPCParameters): Promise<R> {
         // TODO: improve query filter e.g., windowID or tabID
         const tabs = await new Promise<chrome.tabs.Tab[]>(resolve => chrome.tabs.query({ active : true }, resolve));
@@ -25,20 +25,11 @@ export class IPC implements PlatformIPC {
                 //console.log(`App::IPC.Send::${method}`, parameters);
                 chrome.tabs.sendMessage<IPCPayload<WebIPC>, R>(tab.id, { method, parameters }, resolve);
             } else {
-                throw new Error(/* TODO: Message */);
+                throw new Error();
             }
         });
     }
-
-    private Listen(payload: IPCPayload<AppIPC>, sender: chrome.runtime.MessageSender, callback: (response: IPCResponse) => void): boolean | void {
-        //console.log('App::IPC.Received', payload, sender, callback);
-        if(payload.method in this) {
-            this[payload.method].call<WebIPC, IPCParameters, Promise<IPCResponse>>(this, ...payload.parameters).then(callback);
-            return true;
-        } else {
-            console.error('No IPC callback handler found for:', payload.method);
-        }
-    }
+    */
 
     public async StopRPC() {
         return this.RPC?.Stop();
@@ -79,6 +70,7 @@ export class IPC implements PlatformIPC {
     }
 
     public async LoadMediaContainerFromURL(url: string) {
-        return this.Send<void>('LoadMediaContainerFromURL', url);
+        this.win.webContents.send('LoadMediaContainerFromURL', url);
+        //return this.Send<void>('LoadMediaContainerFromURL', url);
     }
 }

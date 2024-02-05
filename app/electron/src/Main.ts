@@ -1,16 +1,9 @@
 import path from 'path';
 import yargs from 'yargs';
 import { app, BrowserWindow } from 'electron';
+import { IPC } from './ipc/InterProcessCommunication';
 //import { RPCServer } from '../../nw/src/rpc/Server';
 //import { Contract } from '../../nw/src/rpc/Contract';
-
-/*
-import { RPCServer } from './rpc/Server';
-import { Contract } from './rpc/Contract';
-import { IPC } from './ipc/InterProcessCommunication';
-*/
-
-//export * from './ipc/Preload';
 
 async function GetArgumentURL(): Promise<string | undefined> {
     try {
@@ -35,27 +28,22 @@ async function GetURL(): Promise<string> {
 
 function createWindow(url: string) {
 
-    //const ipc = new IPC();
-    //ipc.RPC = new RPCServer('/hakuneko', new Contract(ipc));
-
     const win = new BrowserWindow({
         //icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
         width: 1280,
         height: 720,
         center: true,
         webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
             // TODO: Bundle preload.ts
             preload: path.join('.', 'ipc', 'Preload.js'),
             //disableBlinkFeatures: 'AutomationControlled',
         },
     });
 
-    /*
-    // Test active push message to Renderer-process.
-    win.webContents.on('did-finish-load', () => {
-        win?.webContents.send('main-process-message', (new Date).toLocaleString())
-    });
-    */
+    const ipc = new IPC(win);
+    //ipc.RPC = new RPCServer('/hakuneko', new Contract(ipc));
 
     win.loadURL(url);
 }
