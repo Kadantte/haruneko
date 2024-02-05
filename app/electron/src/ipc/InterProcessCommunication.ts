@@ -1,6 +1,6 @@
 import type { PlatformIPC, TypeFromInterface } from '../../../../web/src/engine/platform/InterProcessCommunication';
 import type { RPCServer } from '../../../nw/src/rpc/Server';
-import { ipcMain, type BrowserWindow } from 'electron/main';
+import { ipcMain, type BrowserWindow } from 'electron';
 
 /**
  * Inter Process Communication for NodeWebkit (background page)
@@ -32,14 +32,17 @@ export class IPC implements PlatformIPC {
     */
 
     public async StopRPC() {
-        return this.RPC?.Stop();
+        console.log('IPC::StopRPC()');
+        //return this.RPC?.Stop();
     }
 
     public async RestartRPC(port: number, secret: string) {
-        return this.RPC?.Listen(port, secret, [ /^(chrome-)?extension:/i ]);
+        console.log('IPC::RestartRPC()', port, secret);
+        //return this.RPC?.Listen(port, secret, [ /^(chrome-)?extension:/i ]);
     }
 
     public async SetCloudFlareBypass(userAgent: string, cookies: TypeFromInterface<chrome.cookies.Cookie>[]): Promise<void> {
+        console.log('IPC::SetCloudFlareBypass()', userAgent, cookies);
         /*
         for(const cookie of cookies) {
             await chrome.cookies.set({
@@ -70,7 +73,7 @@ export class IPC implements PlatformIPC {
     }
 
     public async LoadMediaContainerFromURL(url: string) {
-        this.win.webContents.send('LoadMediaContainerFromURL', url);
-        //return this.Send<void>('LoadMediaContainerFromURL', url);
+        console.log('IPC::LoadMediaContainerFromURL()', url);
+        //this.win.webContents.send('LoadMediaContainerFromURL', url);
     }
 }

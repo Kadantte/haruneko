@@ -2,8 +2,8 @@ import path from 'path';
 import yargs from 'yargs';
 import { app, BrowserWindow } from 'electron';
 import { IPC } from './ipc/InterProcessCommunication';
-//import { RPCServer } from '../../nw/src/rpc/Server';
-//import { Contract } from '../../nw/src/rpc/Contract';
+import { RPCServer } from '../../nw/src/rpc/Server';
+import { Contract } from '../../nw/src/rpc/Contract';
 
 async function GetArgumentURL(): Promise<string | undefined> {
     try {
@@ -43,7 +43,7 @@ function createWindow(url: string) {
     });
 
     const ipc = new IPC(win);
-    //ipc.RPC = new RPCServer('/hakuneko', new Contract(ipc));
+    ipc.RPC = new RPCServer('/hakuneko', new Contract(ipc));
 
     win.loadURL(url);
 }
