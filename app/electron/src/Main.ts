@@ -45,7 +45,8 @@ function createWindow(url: string) {
     const ipc = new IPC(win);
     ipc.RPC = new RPCServer('/hakuneko', new Contract(ipc));
 
-    win.loadURL(url);
+    //win.webContents.userAgent = 'Mozilla/5.0';
+    win.loadURL(url, { userAgent: 'Mozilla/5.0' });
 }
 
 app.on('window-all-closed', () => {
