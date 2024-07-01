@@ -1,3 +1,4 @@
+import { describe } from 'vitest';
 import { TestFixture, type Config } from '../../../test/WebsitesFixture';
 
 const config: Config = {
@@ -6,12 +7,12 @@ const config: Config = {
         title: 'MangaHasu'
     },
     container: {
-        url: 'https://mangahasu.se/a-returners-magic-should-be-special-oorLmLZmyBZZ-p33524.html',
+        url: 'https://mangahasu.me/a-returners-magic-should-be-special-oorLmLZmyBZZ-p33524.html',
         id: '/a-returners-magic-should-be-special-oorLmLZmyBZZ-p33524.html',
         title: `A Returner's Magic Should Be Special`
     },
     child: {
-        id: '/a-returners-magic-should-be-special/chapter-1-oorLmLZmyBZZ-c629354.html',
+        id: '/a-returners-magic-should-be-special/chapter-1-oorararaNEZZ-c629354.html',
         title: 'Chapter 1'
     },
     entry: {
@@ -22,4 +23,4 @@ const config: Config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

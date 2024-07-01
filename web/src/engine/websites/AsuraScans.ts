@@ -5,9 +5,9 @@ import * as MangaStream from './decorators/WordPressMangaStream';
 import * as Common from './decorators/Common';
 import { Fetch, FetchWindowScript } from '../platform/FetchProvider';
 
-type TSReader = source[];
+type TSReader = Source[];
 
-type source = {
+type Source = {
     images: string[];
 }
 
@@ -25,7 +25,7 @@ const excludes = [
 export default class extends DecoratableMangaScraper {
 
     public constructor() {
-        super('asurascans', 'Asura Scans', 'https://asuratoon.com', Tags.Media.Manhwa, Tags.Media.Manhua, Tags.Language.English);
+        super('asurascans', 'Asura Scans', 'https://asuratoon.com', Tags.Media.Manhwa, Tags.Media.Manhua, Tags.Language.English, Tags.Source.Scanlator);
     }
 
     public override get Icon() {

@@ -1,26 +1,15 @@
-import { InternalError } from '../Error';
 import { Runtime } from './PlatformInfo';
 import { PlatformInstanceActivator } from './PlatformInstanceActivator';
+import type { FeatureFlags } from '../FeatureFlags';
 import type { FetchProvider } from './FetchProviderCommon';
 import NodeWebkitFetchProvider from './nw/FetchProvider';
 import ElectronFetchProvider from './electron/FetchProvider';
+import GetIPC from './InterProcessCommunication';
 
-class HttpResponseError extends InternalError {
-    constructor(public readonly response: Response) {
-        super(response.statusText);
-    }
-
-    public get status() {
-        return this.response.status;
-    }
-}
-
-export type { HttpResponseError };
-
-export function CreateFetchProvider(): FetchProvider {
+export function CreateFetchProvider(featureFlags: FeatureFlags): FetchProvider {
     return new PlatformInstanceActivator<FetchProvider>()
-        .Configure(Runtime.NodeWebkit, () => new NodeWebkitFetchProvider())
-        .Configure(Runtime.Electron, () => new ElectronFetchProvider())
+        .Configure(Runtime.NodeWebkit, () => new NodeWebkitFetchProvider(featureFlags))
+        .Configure(Runtime.Electron, () => new ElectronFetchProvider(GetIPC(), featureFlags))
         .Create();
 }
 

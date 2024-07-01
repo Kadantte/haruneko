@@ -19,7 +19,7 @@ export abstract class MediaItem {
 export abstract class MediaContainer<T extends MediaChild> {
 
     #tags: Tag[] = [];
-    protected _entries: T[] = [];
+    #entries: T[] = [];
 
     constructor(public readonly Identifier: string, public readonly Title: string, public readonly Parent?: MediaContainer<MediaContainer<T>>) {
     }
@@ -41,7 +41,11 @@ export abstract class MediaContainer<T extends MediaChild> {
     }
 
     public get Entries(): T[] {
-        return this._entries;
+        return this.#entries;
+    }
+
+    protected set Entries(value: T[]) {
+        this.#entries = value;
     }
 
     public *[Symbol.iterator](): Iterator<T> {
@@ -93,12 +97,15 @@ declare global {
 }
 
 if (!Array.prototype.distinct) {
-    Array.prototype.distinct = function <T extends MediaContainer<MediaChild>>(this: Array<T>): Array<T> {
-        function isFirstOccurence(entry: T, index: number, array: Array<T>) {
-            return index === array.findIndex(item => item.Identifier === entry.Identifier);
-        }
-        return this.filter(isFirstOccurence);
-    };
+    Object.defineProperty(Array.prototype, 'distinct', {
+        value: function <T extends MediaContainer<MediaChild>>(this: Array<T>): Array<T> {
+            function isFirstOccurence(entry: T, index: number, array: Array<T>) {
+                return index === array.findIndex(item => item.Identifier === entry.Identifier);
+            }
+            return this.filter(isFirstOccurence);
+        },
+        enumerable: false,
+    });
 }
 
 export abstract class StoreableMediaContainer<T extends MediaItem> extends MediaContainer<T> {

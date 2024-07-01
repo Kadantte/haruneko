@@ -1,3 +1,4 @@
+import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
@@ -6,7 +7,7 @@ const config = {
         title: 'Vortex Scans'
     },
     container: {
-        url: 'https://vortexscans.com/series/regenerate-top-players',
+        url: 'https://vortexscans.org/series/regenerate-top-players',
         id: JSON.stringify({ id: '8', slug: 'regenerate-top-players'}),
         title: 'Regenerate Top Players'
     },
@@ -22,4 +23,4 @@ const config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
