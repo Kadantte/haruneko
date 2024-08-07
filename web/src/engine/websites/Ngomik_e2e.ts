@@ -1,3 +1,4 @@
+import { describe } from 'vitest';
 import { TestFixture, type Config } from '../../../test/WebsitesFixture';
 
 const config: Config = {
@@ -6,7 +7,7 @@ const config: Config = {
         title: 'Ngomik'
     },
     container: {
-        url: 'https://ngomik.net/manga/reborn-as-the-heavenly-demon/',
+        url: 'https://ngomik.mom/manga/reborn-as-the-heavenly-demon/',
         id: '/manga/reborn-as-the-heavenly-demon/',
         title: 'Reborn as The Heavenly Demon'
     },
@@ -22,4 +23,4 @@ const config: Config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

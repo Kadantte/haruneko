@@ -1,4 +1,5 @@
-﻿import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
 const configVolume = {
     plugin: {
@@ -12,17 +13,17 @@ const configVolume = {
     },
     child: {
         id: JSON.stringify({ itemid: '140775', itemtype: 'volume', language: 'en' }),
-        title: 'Vol 38:'
+        title: 'Vol 38: (en)'
     },
     entry: {
         index: 2,
-        size: 1_167_731,
-        type: 'image/png'
+        size: 156_390,
+        type: 'image/jpeg'
     }
 };
 
 const fixtureVolume = new TestFixture(configVolume);
-describe(fixtureVolume.Name, () => fixtureVolume.AssertWebsite());
+describe(fixtureVolume.Name, async () => (await fixtureVolume.Connect()).AssertWebsite());
 
 const configChapter = {
     plugin: {
@@ -36,7 +37,7 @@ const configChapter = {
     },
     child: {
         id: JSON.stringify({ itemid: '1552876', itemtype: 'chapter', language: 'en' }),
-        title: 'Chap 326: To Be A Samurai'
+        title: 'Chap 326: To Be A Samurai (en)'
     },
     entry: {
         index: 0,
@@ -46,4 +47,4 @@ const configChapter = {
 };
 
 const fixtureChapter = new TestFixture(configChapter);
-describe(fixtureChapter.Name, () => fixtureChapter.AssertWebsite());
+describe(fixtureChapter.Name, async () => (await fixtureChapter.Connect()).AssertWebsite());

@@ -1,4 +1,5 @@
-﻿import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
     plugin: {
@@ -6,7 +7,7 @@ const config = {
         title: 'CopyManga'
     },
     container: {
-        url: 'https://www.copymanga.site/comic/zhanvmeizhabao',
+        url: 'https://copymanga.site/comic/zhanvmeizhabao',
         id: 'zhanvmeizhabao',
         title: '渣女沒渣報'
     },
@@ -16,10 +17,10 @@ const config = {
     },
     entry: {
         index: 0,
-        size: 217_474,
-        type: 'image/jpeg'
+        size: 156_108,
+        type: 'image/webp'
     }
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

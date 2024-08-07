@@ -1,3 +1,4 @@
+import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
@@ -6,7 +7,7 @@ const config = {
         title: 'Void Scans'
     },
     container: {
-        url: 'https://hivescans.com/manga/99-reinforced-wooden-stick/',
+        url: 'https://hivetoon.com/manga/99-reinforced-wooden-stick/',
         id: '/manga/99-reinforced-wooden-stick/',
         title: '+99 Reinforced Wooden Stick'
     },
@@ -22,4 +23,4 @@ const config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

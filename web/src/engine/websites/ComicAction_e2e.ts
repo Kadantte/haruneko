@@ -1,4 +1,5 @@
-﻿import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture, type Config } from '../../../test/WebsitesFixture';
 
 const config: Config = {
     plugin: {
@@ -11,15 +12,15 @@ const config: Config = {
         title: 'ダンジョンの中のひと'
     },
     child: {
-        id: '/episode/14079602755075901255',
-        title: '第32話'
+        id: '/episode/13933686331665056851',
+        title: '第1話'
     },
     entry: {
         index: 0,
-        size: 500_250,
+        size: 712_291,
         type: 'image/png'
     }
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

@@ -45,12 +45,7 @@ const mangaIdScript = `
 `;
 
 const pageScript = `
-    new Promise( resolve => {
-        resolve([...document.querySelectorAll('section img[loading="lazy"][srcset]')].map(img => {
-            const url = new URL(img.srcset, window.location.origin);
-            return (decodeURIComponent(url.searchParams.get('url')));
-        }))
-    })
+    new Promise( resolve =>  resolve([...document.querySelectorAll('section img[loading]')].map(img => img.src)) );
 `;
 
 @Common.PagesSinglePageJS(pageScript, 2500)
@@ -59,7 +54,7 @@ export default class extends DecoratableMangaScraper {
     private readonly apiURL = new URL('/api/', this.URI);
 
     public constructor() {
-        super('vortexscans', `Vortex Scans`, 'https://vortexscans.com', Tags.Media.Manga, Tags.Media.Manhwa, Tags.Language.English, Tags.Source.Scanlator);
+        super('vortexscans', `Vortex Scans`, 'https://vortexscans.org', Tags.Media.Manga, Tags.Media.Manhwa, Tags.Language.English, Tags.Source.Scanlator);
     }
 
     public override get Icon() {
@@ -71,7 +66,7 @@ export default class extends DecoratableMangaScraper {
     }
 
     public override async FetchManga(provider: MangaPlugin, url: string): Promise<Manga> {
-        const data = await FetchWindowScript<MangaID>(new Request(url), mangaIdScript, 1500);
+        const data = await FetchWindowScript<MangaID>(new Request(url), mangaIdScript, 4000);
         return new Manga(this, provider, JSON.stringify({ id: data.id.toString(), slug: data.slug }), data.title);
     }
 

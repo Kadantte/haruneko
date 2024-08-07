@@ -1,4 +1,5 @@
-﻿import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
     plugin: {
@@ -6,7 +7,7 @@ const config = {
         title: 'Quantum Scans'
     },
     container: {
-        url: 'https://readers-point.space/series/master-of-the-martial-arts-library/',
+        url: 'https://qscomics.org/series/master-of-the-martial-arts-library/',
         id: '/series/master-of-the-martial-arts-library/',
         title: 'Master of the Martial Arts Library'
     },
@@ -16,10 +17,10 @@ const config = {
     },
     entry: {
         index: 0,
-        size: 2_386_263,
+        size: 2_670_186,
         type: 'image/jpeg'
     }
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

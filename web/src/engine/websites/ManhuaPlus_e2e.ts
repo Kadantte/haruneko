@@ -1,3 +1,4 @@
+import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
@@ -6,20 +7,20 @@ const config = {
         title: 'ManhuaPlus'
     },
     container: {
-        url: 'https://manhuaplus.com/manga/martial-peak/',
-        id: JSON.stringify({ post: '1855', slug: '/manga/martial-peak/' }),
+        url: 'https://manhuaplus.org/manga/martial-peak01',
+        id: '/manga/martial-peak01',
         title: 'Martial Peak'
     },
     child: {
-        id: '/manga/martial-peak/chapter-500/',
+        id: '/manga/martial-peak01/chapter-500',
         title: 'Chapter 500'
     },
     entry: {
         index: 0,
-        size: 191_928,
+        size: 183_750,
         type: 'image/jpeg'
     }
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

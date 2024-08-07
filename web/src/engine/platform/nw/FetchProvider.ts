@@ -1,4 +1,5 @@
 import { Exception } from '../../Error';
+import type { FeatureFlags } from '../../FeatureFlags';
 import { EngineResourceKey as R } from '../../../i18n/ILocale';
 import { FetchProvider, type ScriptInjection } from '../FetchProviderCommon';
 import { FetchRedirection } from '../AntiScrapingDetection';
@@ -21,7 +22,7 @@ async function UpdateCookieHeader(url: string, headers: Headers) {
     const cookies = value ? value.split(';').map(cookie => cookie.trim()) : [];
     const browserCookies = await chrome.cookies.getAll({ url });
     for(const browserCookie of browserCookies) {
-        if(!cookies.some(cookie => cookie.startsWith(browserCookie.name + '='))) {
+        if(cookies.none(cookie => cookie.startsWith(browserCookie.name + '='))) {
             cookies.push(`${browserCookie.name}=${browserCookie.value}`);
         }
     }
@@ -86,6 +87,10 @@ class FetchRequest extends Request {
 
 export default class extends FetchProvider {
 
+    constructor(private readonly featureFlags: FeatureFlags) {
+        super();
+    }
+
     /**
      * Configure various system globals to bypass FetchAPI limitations.
      * This method can only be run once for all instances.
@@ -131,7 +136,9 @@ export default class extends FetchProvider {
     public async Fetch(request: Request): Promise<Response> {
         // Fetch API defaults => https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
         await UpdateCookieHeader(request.url, request.headers);
-        return fetch(request);
+        const response = await fetch(request);
+        await super.ValidateResponse(response);
+        return response;
     }
 
     public async FetchWindow(request: Request, timeout: number, preload: ScriptInjection<void> = () => undefined): Promise<NWJS_Helpers.win> {
@@ -143,7 +150,7 @@ export default class extends FetchProvider {
         const options: NWJS_Helpers.WindowOpenOption & { mixed_context: boolean } = {
             new_instance: false, // TODO: Would be safer when set to TRUE, but this would prevent sharing cookies ...
             mixed_context: false,
-            show: this.IsVerboseModeEnabled,
+            show: this.featureFlags.VerboseFetchWindow.Value,
             position: 'center',
             width: 1280,
             height: 720,
@@ -166,7 +173,21 @@ export default class extends FetchProvider {
             }
 
             let cancellation = setTimeout(destroy, timeout);
-            let teardownOpenedWindow = () => {};
+            let teardownOpenedWindow = () => {
+                clearTimeout(cancellation);
+                performRedirectionOrFinalize = () => Promise.resolve();
+                // NOTE: removing listeners seems to have no effect, probably a bug in NW.js
+                win.removeAllListeners('document-start');
+                win.removeAllListeners('new-win-policy');
+                win.removeAllListeners('navigation');
+                win.removeAllListeners('loaded');
+                win.removeAllListeners();
+                if(invocations.none(invocation => invocation.name === 'DOMContentLoaded' || invocation.name === 'loaded')) {
+                    console.warn('FetchWindow() was terminated without <DOMContentLoaded> or <loaded> event being invoked!', invocations);
+                } else if(this.featureFlags.VerboseFetchWindow.Value) {
+                    console.log('FetchWindow()::invocations', invocations);
+                }
+            };
 
             let performRedirectionOrFinalize = async () => {
                 try {
@@ -194,8 +215,9 @@ export default class extends FetchProvider {
             };
 
             if(!win.window || nw.Window.get().window === win.window) {
-                invocations.push({ name: 'win.reload()', info: `DOM Window: ${win.window}`});
-                win.reload();
+                invocations.push({ name: 'win.window', info: `Invalid DOM Window: ${win.window}`});
+                teardownOpenedWindow();
+                return reject(new Error('Failed to open window (invalid content)!'));
             } else {
                 win.eval(null, preload instanceof Function ? `(${preload})()` : preload);
                 //preload(win.window.window, win.window.window);
@@ -237,30 +259,14 @@ export default class extends FetchProvider {
                     performRedirectionOrFinalize();
                 }
             });
-
-            teardownOpenedWindow = () => {
-                clearTimeout(cancellation);
-                performRedirectionOrFinalize = () => Promise.resolve();
-                // NOTE: removing listeners seems to have no effect, probably a bug in NW.js
-                win.removeAllListeners('document-start');
-                win.removeAllListeners('new-win-policy');
-                win.removeAllListeners('navigation');
-                win.removeAllListeners('loaded');
-                win.removeAllListeners();
-                if(!invocations.some(invocation => invocation.name === 'DOMContentLoaded' || invocation.name === 'loaded')) {
-                    console.warn('FetchWindow() timed out without <DOMContentLoaded> or <loaded> event being invoked!', invocations);
-                } else if(this.IsVerboseModeEnabled) {
-                    console.log('FetchWindow()::invocations', invocations);
-                }
-            };
         }));
     }
 
-    public async FetchWindowScript<T>(request: Request, script: ScriptInjection<T>, delay = 0, timeout = 60_000): Promise<T> {
+    public async FetchWindowScript<T extends void | JSONElement>(request: Request, script: ScriptInjection<T>, delay = 0, timeout = 60_000): Promise<T> {
         return this.FetchWindowPreloadScript(request, () => undefined, script, delay, timeout);
     }
 
-    public async FetchWindowPreloadScript<T>(request: Request, preload: ScriptInjection<void>, script: ScriptInjection<T>, delay = 0, timeout = 60_000): Promise<T> {
+    public async FetchWindowPreloadScript<T extends void | JSONElement>(request: Request, preload: ScriptInjection<void>, script: ScriptInjection<T>, delay = 0, timeout = 60_000): Promise<T> {
         const start = Date.now();
         const win = await this.FetchWindow(request, timeout, preload);
         const elapsed = Date.now() - start;
@@ -280,7 +286,7 @@ export default class extends FetchProvider {
                 new Promise<T>((_, reject) => setTimeout(reject, timeout - elapsed, new Exception(R.FetchProvider_FetchWindow_TimeoutError)))
             ]);
         } finally {
-            if(!this.IsVerboseModeEnabled) {
+            if(!this.featureFlags.VerboseFetchWindow.Value) {
                 win.close(true);
             }
         }

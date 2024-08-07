@@ -1,3 +1,4 @@
+import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
@@ -6,7 +7,7 @@ const config = {
         title: 'Reset Scans'
     },
     container: {
-        url: 'https://reset-scans.xyz/manga/the-ultimate-of-all-ages/',
+        url: 'https://resetscan.com/manga/the-ultimate-of-all-ages/',
         id: JSON.stringify({ post: '2313', slug: '/manga/the-ultimate-of-all-ages/' }),
         title: 'The Ultimate of All Ages'
     },
@@ -22,4 +23,4 @@ const config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

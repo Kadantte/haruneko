@@ -1,4 +1,5 @@
-﻿import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
     plugin: {
@@ -6,7 +7,7 @@ const config = {
         title: 'MangaFreak'
     },
     container: {
-        url: 'https://w15.mangafreak.net/Manga/Against_The_Gods',
+        url: 'https://w1.mangafreak.me/Manga/Against_The_Gods',
         id: '/Manga/Against_The_Gods',
         title: 'Against the Gods'
     },
@@ -22,4 +23,4 @@ const config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

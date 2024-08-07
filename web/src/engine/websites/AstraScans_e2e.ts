@@ -1,4 +1,5 @@
-﻿import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
     plugin: {
@@ -6,20 +7,20 @@ const config = {
         title: 'AstraScans'
     },
     container: {
-        url: 'https://astrascans.com/10000/the-end-is-a-game-to-me/',
-        id: '/10000/the-end-is-a-game-to-me/',
-        title: 'The End Is a Game to Me'
+        url: 'https://astrascans.org/series/anti-hero/',
+        id: '/series/anti-hero/',
+        title: 'Anti-Hero'
     },
     child: {
-        id: '/the-end-is-a-game-to-me-chapter-22/',
-        title: 'Chapter 22'
+        id: '/anti-hero-chapter-3/',
+        title: 'Chapter 3'
     },
     entry: {
-        index: 2,
-        size: 746_557,
+        index: 0,
+        size: 176_620,
         type: 'image/jpeg'
     }
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

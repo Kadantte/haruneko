@@ -1,4 +1,5 @@
-﻿import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture, type Config } from '../../../test/WebsitesFixture';
 
 const config: Config = {
     plugin: {
@@ -11,15 +12,15 @@ const config: Config = {
         title: '俺は星間国家の悪徳領主！'
     },
     child: {
-        id: '/episode/14079602755156479105',
-        title: '第25話「大増税だ!!」(3)'
+        id: '/episode/3269754496561191129',
+        title: '第1話「案内人」'
     },
     entry: {
         index: 0,
-        size: 1_168_802,
+        size: 1_684_896,
         type: 'image/png'
     }
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

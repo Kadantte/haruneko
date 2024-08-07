@@ -1,3 +1,4 @@
+import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
@@ -6,7 +7,7 @@ const config = {
         title: 'Hiperdex'
     },
     container: {
-        url: 'https://hiperdex.com/manga/b-chiku/',
+        url: 'https://hiperdex.top/manga/b-chiku/',
         id: JSON.stringify({ post: '2529', slug: '/manga/b-chiku/' }),
         title: 'B-Chiku'
     },
@@ -22,4 +23,4 @@ const config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

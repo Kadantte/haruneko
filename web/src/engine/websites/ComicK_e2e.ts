@@ -1,3 +1,4 @@
+import { describe } from 'vitest';
 import { TestFixture, type Config } from '../../../test/WebsitesFixture';
 
 const config: Config = {
@@ -6,7 +7,7 @@ const config: Config = {
         title: 'ComicK'
     },
     container: {
-        url: 'https://comick.cc/comic/00-solo-leveling',
+        url: 'https://comick.io/comic/00-solo-leveling',
         id: '71gMd0vF',
         title: 'Solo Leveling'
     },
@@ -22,4 +23,4 @@ const config: Config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

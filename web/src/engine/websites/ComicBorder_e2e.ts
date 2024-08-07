@@ -1,4 +1,5 @@
-﻿import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture, type Config } from '../../../test/WebsitesFixture';
 
 const config: Config = {
     plugin: {
@@ -12,14 +13,14 @@ const config: Config = {
     },
     child: {
         id: '/episode/14079602755169791873',
-        title: 'Ep.01'
+        title: 'Ep.01　貧民窟の魔女'
     },
     entry: {
         index: 0,
-        size: 1_197_347,
+        size: 1_323_904,
         type: 'image/png'
     }
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

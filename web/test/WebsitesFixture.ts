@@ -1,6 +1,8 @@
-import type { JSHandle, Page } from 'puppeteer-core';
-import type { MediaContainer, MediaChild, MediaItem } from '../src/engine/providers/MediaPlugin';
+import { it, expect } from 'vitest';
+import type { JSHandle } from 'puppeteer-core';
+import { PuppeteerFixture } from '../../test/PuppeteerFixture';
 import type { IValue } from '../src/engine/SettingsManager';
+import type { MediaContainer, MediaChild, MediaItem } from '../src/engine/providers/MediaPlugin';
 
 export type Config = {
     plugin: {
@@ -30,18 +32,14 @@ export type Config = {
 
 type MediaPuginInstance = MediaContainer<MediaChild> & { Initialize(): Promise<void> };
 
-export class TestFixture<TWebsitePlugin extends MediaContainer<MediaChild>, TContainer extends MediaContainer<MediaChild>, TChild extends MediaContainer<MediaItem>, TEntry extends MediaItem> {
+export class TestFixture<TWebsitePlugin extends MediaContainer<MediaChild>, TContainer extends MediaContainer<MediaChild>, TChild extends MediaContainer<MediaItem>, TEntry extends MediaItem> extends PuppeteerFixture {
 
-    private readonly page: Page;
-    private readonly config: Config;
-
-    constructor(config: Config) {
-        this.page = global.PAGE as Page;
-        this.config = config;
+    constructor(private readonly config: Config) {
+        super();
     }
 
     private async GetRemotePlugin(pluginID: string, settings?: Record<string, IValue>): Promise<JSHandle<TWebsitePlugin>> {
-        return this.page.evaluateHandle(async (id: string, setup: Record<string, IValue>) => {
+        return super.Page.evaluateHandle(async (id: string, setup: Record<string, IValue>) => {
             const plugin = window.HakuNeko.PluginController.WebsitePlugins.find(website => website.Identifier === id);
             for (const key in setup) {
                 plugin.Settings.Get(key).Value = setup[key];
@@ -61,7 +59,7 @@ export class TestFixture<TWebsitePlugin extends MediaContainer<MediaChild>, TCon
 
     private async GetRemoteChild(remoteContainer: JSHandle<TContainer>, childID: string): Promise<JSHandle<TChild>> {
         return remoteContainer.evaluateHandle(async (container: TContainer, id: string) => {
-            const child = (container.Entries as TChild[]).find(child => child.Identifier === id);
+            const child = (container.Entries.Value as TChild[]).find(child => child.Identifier === id);
             await child?.Update();
             return child;
         }, childID);
@@ -69,7 +67,7 @@ export class TestFixture<TWebsitePlugin extends MediaContainer<MediaChild>, TCon
 
     private async GetRemoteEntry(remoteChild: JSHandle<TChild>, entryIndex?: number): Promise<JSHandle<TEntry>> {
         return remoteChild.evaluateHandle(async (child: TChild, index: number) => {
-            return child?.Entries[index] as TEntry;
+            return child?.Entries.Value[index] as TEntry;
         }, entryIndex);
     }
 

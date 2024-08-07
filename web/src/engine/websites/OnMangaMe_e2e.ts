@@ -1,4 +1,5 @@
-﻿import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
     plugin: {
@@ -12,7 +13,7 @@ const config = {
     },
     child: {
         id: '/manga/chainsaw-man/127',
-        title: '127 :  أنقذ ال اسا'
+        title: '127 : أنقذ ال اسا'
     },
     entry: {
         index: 1,
@@ -22,4 +23,4 @@ const config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

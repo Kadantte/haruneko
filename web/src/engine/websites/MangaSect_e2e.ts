@@ -1,4 +1,5 @@
-﻿import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
     plugin: {
@@ -6,20 +7,20 @@ const config = {
         title: 'MangaSect'
     },
     container: {
-        url: 'https://mangasect.com/manga/shen-yin-wang-zuo/298',
-        id: '/manga/shen-yin-wang-zuo/298',
-        title: 'Shen Yin Wang Zuo'
+        url: 'https://mangasect.net/manga/jia-you-shuangsheng-nuyou',
+        id: '/manga/jia-you-shuangsheng-nuyou',
+        title: 'Jia You Shuangsheng Nuyou'
     },
     child: {
-        id: '/manga/shen-yin-wang-zuo/chapter-310/97235',
-        title: 'Chapter 310'
+        id: '/manga/jia-you-shuangsheng-nuyou/chapter-297',
+        title: 'Chapter 297'
     },
     entry: {
-        index: 1,
-        size: 200_749,
+        index: 0,
+        size: 116_578,
         type: 'image/jpeg'
     }
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

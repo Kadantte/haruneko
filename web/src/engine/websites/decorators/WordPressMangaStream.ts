@@ -26,7 +26,7 @@ const scriptPageListLinks = `ts_reader_control.getImages();`;
  ******** Manga from URL Extraction Methods ********
  ***************************************************/
 
-function MangaLabelExtractor(this: MangaScraper, element: HTMLElement) {
+export function MangaLabelExtractor(this: MangaScraper, element: HTMLElement) {
     return [
         /^Comic\s+/i,
         /^Komik\s+/i,
@@ -164,7 +164,7 @@ function ChapterPageExtractor(this: MangaScraper, image: HTMLImageElement): stri
  */
 export async function FetchPagesSinglePageCSS(this: MangaScraper, chapter: Chapter, exclude: RegExp[] = [], query = queryPageListLinks): Promise<Page[]> {
     const pages = await Common.FetchPagesSinglePageCSS.call(this, chapter, query, ChapterPageExtractor.bind(this));
-    return pages.filter(page => !exclude.some(pattern => pattern.test(page.Link.pathname)));
+    return pages.filter(page => exclude.none(pattern => pattern.test(page.Link.pathname)));
 }
 
 /**
@@ -195,7 +195,7 @@ export function PagesSinglePageCSS(exclude: RegExp[] = [], query = queryPageList
  */
 export async function FetchPagesSinglePageJS(this: MangaScraper, chapter: Chapter, exclude: RegExp[] = [], script = scriptPageListLinks, delay = 2500): Promise<Page[]> {
     const pages = await Common.FetchPagesSinglePageJS.call(this, chapter, script, delay);
-    return pages.filter(page => !exclude.some(pattern => pattern.test(page.Link.pathname)));
+    return pages.filter(page => exclude.none(pattern => pattern.test(page.Link.pathname)));
 }
 
 /**

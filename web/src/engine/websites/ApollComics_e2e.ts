@@ -1,3 +1,4 @@
+import { describe } from 'vitest';
 import { TestFixture, type Config } from '../../../test/WebsitesFixture';
 
 const config: Config = {
@@ -7,7 +8,7 @@ const config: Config = {
         timeout: 60_000
     },
     container: {
-        url: 'https://apollcomics.com/manga/the-girls-nest/',
+        url: 'https://apollcomics.es/manga/the-girls-nest/',
         id: JSON.stringify({ post: '1168', slug: '/manga/the-girls-nest/' }),
         title: 'The Girls Nest'
     },
@@ -23,4 +24,4 @@ const config: Config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());

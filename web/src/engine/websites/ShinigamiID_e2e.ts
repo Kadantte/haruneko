@@ -1,14 +1,15 @@
-﻿import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { describe } from 'vitest';
+import { TestFixture, type Config } from '../../../test/WebsitesFixture';
 
 const config: Config = {
     plugin: {
         id: 'shinigamiid',
         title: 'Shinigami ID',
     },
-    /* CloudFlare
+    /* Cloudflare
     container: {
-        url: 'https://shinigami.cx/series/sss-class-suicide-hunter/',
-        id: JSON.stringify({ post: "641", slug: "/series/sss-class-suicide-hunter/" }),
+        url: 'https://shinigami02.com/series/sss-class-suicide-hunter/',
+        id: JSON.stringify({ post: '641', slug: '/series/sss-class-suicide-hunter/' }),
         title: 'SSS-Class Suicide Hunter'
     },
     child: {
@@ -23,4 +24,4 @@ const config: Config = {
 };
 
 const fixture = new TestFixture(config);
-describe(fixture.Name, () => fixture.AssertWebsite());
+describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
