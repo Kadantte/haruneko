@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'argosscan',
         title: 'Argos Scan'
     },
     container: {
-        url: 'https://argosscan.com/obras/159/battle-frenzy-webtoon-',
-        id: '159',
-        title: 'Battle Frenzy (Webtoon)'
-    },
+        url: 'https://aniargos.com/6b217fc9-6ef8-4708-8e96-2d06e0a78349/o-apocalipse-chegou',
+        id: '/6b217fc9-6ef8-4708-8e96-2d06e0a78349/o-apocalipse-chegou',
+        title: 'O Apocalipse Chegou',
+    }, /* Need login
     child: {
-        id: 'a204ff55-72b2-4ebe-b8db-ee9cfe138f48',
-        title: 'Ch. 222 - Capítulo 222'
+        id: '/6b217fc9-6ef8-4708-8e96-2d06e0a78349/o-apocalipse-chegou/capitulo/9',
+        title: 'Capítulo 9',
     },
     entry: {
-        index: 0,
-        size: 1_191_872,
-        type: 'image/jpeg'
-    }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+        index: 1,
+        size: 270_536,
+        type: 'image/webp'
+    }*/
+}).AssertWebsite();

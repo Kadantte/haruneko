@@ -1,58 +1,75 @@
 import type { BrowserWindowConstructorOptions, LoadURLOptions } from 'electron';
 import { Observable, type IObservable } from '../../Observable';
-import type { IPC } from '../InterProcessCommunication';
-import type { ScriptInjection } from '../FetchProviderCommon';
-import { RemoteBrowserWindowController as Channels } from '../../../../../app/src/ipc/Channels';
+import type { IRemoteBrowserWindow } from '../RemoteBrowserWindow';
+import { GetIPC } from './InterProcessCommunication';
+import { Channels } from '../../../../../app/electron/src/ipc/InterProcessCommunicationChannels';
 
-export default class RemoteBrowserWindow {
+export default class RemoteBrowserWindow implements IRemoteBrowserWindow {
 
     private windowID = Number.NaN;
 
-    private readonly domReady = new Observable<Document, RemoteBrowserWindow>(null, this);
-    public get DOMReady(): IObservable<Document, RemoteBrowserWindow> {
+    private readonly ipc = GetIPC();
+
+    private readonly domReady = new Observable<void, RemoteBrowserWindow>(null, this);
+    public get DOMReady(): IObservable<void, RemoteBrowserWindow> {
         return this.domReady;
     };
 
-    private readonly beforeNavigate = new Observable<URL, RemoteBrowserWindow>(null, this);
-    public get BeforeNavigate(): IObservable<URL, RemoteBrowserWindow> {
-        return this.beforeNavigate;
+    private readonly beforeWindowNavigate = new Observable<URL, RemoteBrowserWindow>(null, this);
+    public get BeforeWindowNavigate(): IObservable<URL, RemoteBrowserWindow> {
+        return this.beforeWindowNavigate;
     };
 
-    constructor(private readonly ipc: IPC<Channels.App, Channels.Web>) {
-        this.ipc.Listen(Channels.Web.OnDomReady, this.OnDomReady.bind(this));
-        this.ipc.Listen(Channels.Web.OnBeforeNavigate, this.OnBeforeNavigate.bind(this));
+    private readonly beforeFrameNavigate = new Observable<URL, RemoteBrowserWindow>(null, this);
+    public get BeforeFrameNavigate(): IObservable<URL, RemoteBrowserWindow> {
+        return this.beforeFrameNavigate;
+    };
+
+    constructor () {
+        this.ipc.On(Channels.RemoteBrowserWindowController.OnDomReady, this.OnDomReady.bind(this));
+        this.ipc.On(Channels.RemoteBrowserWindowController.OnBeforeNavigate, this.OnBeforeNavigate.bind(this));
     }
 
     private async OnDomReady(windowID: number): Promise<void> {
         if(windowID === this.windowID) {
-            const html = await this.ExecuteScript<string>(`document.querySelector('html').innerHTML`);
-            this.domReady.Value = new DOMParser().parseFromString(html, 'text/html');
+            this.domReady.Dispatch();
         }
     }
 
     private async OnBeforeNavigate(windowID: number, url: string, isMainFrame: boolean, isSameDocument: boolean): Promise<void> {
         if(windowID === this.windowID && url.startsWith('http') && !isSameDocument) {
-            this.beforeNavigate.Value = new URL(url);
+            if(isMainFrame) {
+                this.beforeWindowNavigate.Value = new URL(url);
+            } else {
+                this.beforeFrameNavigate.Value = new URL(url);
+            }
         }
     }
 
-    public async Open(request: Request, show: boolean = false, preload: ScriptInjection<void> = '') {
+    public async Open(request: Request, show: boolean = false, preload: string = '') {
+
         const openOptions: BrowserWindowConstructorOptions = {
             show: show,
             width: 1280,
-            height: 720,
+            height: 800,
+            center: true,
             webPreferences: {
-                preload: preload instanceof Function ? `(${preload})()` : preload,
+                sandbox: true,
                 webSecurity: true,
-                contextIsolation: true,
+                contextIsolation: false, // Disabled for sharing `window` instance in pre-load script: https://www.electronjs.org/docs/latest/tutorial/context-isolation#what-is-it
                 nodeIntegration: false,
                 nodeIntegrationInWorker: false,
-                nodeIntegrationInSubFrames: false,
+                nodeIntegrationInSubFrames: true, // Enabled to execute pre-load script in all sub-frames: https://github.com/electron/electron/issues/22582
+                backgroundThrottling: false, // Disabled to force timers, observers and animation frames to work in non-visible window: https://www.electronjs.org/docs/latest/api/browser-window#page-visibility
                 disableBlinkFeatures: 'AutomationControlled',
             }
         };
 
-        this.windowID = await this.ipc.Send(Channels.App.OpenWindow, JSON.stringify(openOptions)) as number;
+        if (preload) {
+            openOptions.webPreferences.preload = preload;
+        }
+
+        this.windowID = await this.ipc.Invoke(Channels.RemoteBrowserWindowController.OpenWindow, JSON.stringify(openOptions));
 
         /*
         if(isNaN(this.windowID)) {
@@ -61,28 +78,37 @@ export default class RemoteBrowserWindow {
         */
 
         const loadOptions: LoadURLOptions = {
-            userAgent: request.headers.get('User-Agent') ?? navigator.userAgent,
-            httpReferrer: request.headers.get('Referer') ?? request.referrer ?? request.url,
+            userAgent: navigator.userAgent,
+            httpReferrer: request.referrer,
         };
 
-        await this.ipc.Send(Channels.App.LoadURL, this.windowID, request.url, JSON.stringify(loadOptions));
+        // NOTE: Keep in mind that forbidden headers are concealed with the prefix 'X-FetchAPI-'
+        if(request.headers) loadOptions.extraHeaders = Array.from(request.headers, ([key, value]) => `${key}: ${value}`).join('\n');
+        // TODO: Add body for POST request e.g., in case of submitting a form ...
+        // if(/^POST$/i.test(request.method)) loadOptions.postData = ... // Array<(UploadRawData) | (UploadFile)>;
+
+        await this.ipc.Invoke(Channels.RemoteBrowserWindowController.LoadURL, this.windowID, request.url, JSON.stringify(loadOptions));
     }
 
     public async Close(): Promise<void> {
-        if(!isNaN(this.windowID)) {
-            return this.ipc.Send(Channels.App.CloseWindow, this.windowID);
+        if(!Number.isNaN(this.windowID)) {
+            return this.ipc.Invoke(Channels.RemoteBrowserWindowController.CloseWindow, this.windowID);
         }
     }
 
     public async Show(): Promise<void> {
-        return this.ipc.Send(Channels.App.SetVisibility, this.windowID, true);
+        return this.ipc.Invoke(Channels.RemoteBrowserWindowController.SetVisibility, this.windowID, true);
     }
 
     public async Hide(): Promise<void> {
-        return this.ipc.Send(Channels.App.SetVisibility, this.windowID, false);
+        return this.ipc.Invoke(Channels.RemoteBrowserWindowController.SetVisibility, this.windowID, false);
     }
 
-    public async ExecuteScript<T extends void | JSONElement>(script: ScriptInjection<T> = ''): Promise<T> {
-        return this.ipc.Send(Channels.App.ExecuteScript, this.windowID, script instanceof Function ? `(${script})()` : script);
+    public async ExecuteScript<T extends void | JSONElement>(script: string = ''): Promise<T> {
+        return this.ipc.Invoke<T>(Channels.RemoteBrowserWindowController.ExecuteScript, this.windowID, script);
+    }
+
+    public async SendDebugCommand<T extends void | JSONElement>(method: string, parameters?: JSONObject): Promise<T> {
+        return this.ipc.Invoke<T>(Channels.RemoteBrowserWindowController.SendDebugCommand, this.windowID, method, parameters);
     }
 }

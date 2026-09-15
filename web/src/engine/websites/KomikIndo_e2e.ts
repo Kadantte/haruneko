@@ -1,13 +1,12 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'komikindo',
         title: 'KomikIndo'
     },
     container: {
-        url: 'https://komikindo.co/manga/please-go-home-akutsu-san/',
+        url: 'https://komiksin.net/manga/please-go-home-akutsu-san/',
         id: '/manga/please-go-home-akutsu-san/',
         title: 'Please Go Home, Akutsu-san!'
     },
@@ -20,7 +19,4 @@ const config: Config = {
         size: 4_107_459,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

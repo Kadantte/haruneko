@@ -1,13 +1,12 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'truyenqq',
         title: 'TruyenQQ'
     },
     container: {
-        url: 'https://truyenqqviet.com/truyen-tranh/long-phi-bat-bai-322',
+        url: 'https://truyenqqko.com/truyen-tranh/long-phi-bat-bai-322',
         id: '/truyen-tranh/long-phi-bat-bai-322',
         title: 'Long Phi Bất Bại'
     },
@@ -20,7 +19,4 @@ const config = {
         size: 301_848,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

@@ -1,10 +1,14 @@
 import { Tags } from '../Tags';
 import icon from './LezhinES.webp';
-import Delitoon from './Delitoon';
-export default class extends Delitoon {
+import { DelitoonBase } from './templates/DelitoonBase';
+
+export default class extends DelitoonBase {
+
     public constructor() {
-        super('lezhin-es', `Lezhin (Spanish)`, 'https://www.lezhin.es', 'LEZHIN_ES', [Tags.Language.Spanish, Tags.Media.Manhwa, Tags.Source.Official]);
+        super('lezhin-es', 'Lezhin (Spanish)', 'https://www.lezhin.es', Tags.Language.Spanish, Tags.Media.Manhwa, Tags.Source.Official);
+        this.SetDRM(this.URI, 'LEZHIN_ES', 'Pacific/Pitcairn');
     }
+
     public override get Icon() {
         return icon;
     }

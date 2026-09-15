@@ -1,21 +1,17 @@
-import { mock } from 'vitest-mock-extended';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import type { ISettings, SettingsManager } from './SettingsManager';
 import type { StorageController } from './StorageController';
 import { PluginController } from './PluginController';
 import { Tags } from './Tags';
+import { legacyWebsiteIdentifierMap } from './transformers/BookmarkConverter';
 
 class TestFixture {
 
-    public readonly MockStorageController = mock<StorageController>();
-    public readonly MockSettingsManager = mock<SettingsManager>();
-
-    constructor() {
-        this.MockSettingsManager.OpenScope.mockReturnValue(mock<ISettings>());
-    }
+    private readonly MockStorageController = { LoadPersistent: vi.fn() };
+    public readonly MockSettingsManager = { OpenScope: vi.fn(() => ({ Initialize: vi.fn() } as unknown as ISettings))};
 
     public CreateTestee() {
-        return new PluginController(this.MockStorageController, this.MockSettingsManager);
+        return new PluginController(this.MockStorageController as unknown as StorageController, this.MockSettingsManager as unknown as SettingsManager);
     }
 }
 
@@ -61,13 +57,17 @@ describe('PluginController', () => {
             expect(actual).toStrictEqual(expected);
         });
 
-        describe.each(new TestFixture().CreateTestee().WebsitePlugins)('$Title', (plugin) => {
+        it('Should have a plugin which matches the target identifier for each mapped legacy plugin', () => {
+            const fixture = new TestFixture();
+            const testee = fixture.CreateTestee();
+            const expected = [ ...legacyWebsiteIdentifierMap.values() ];
 
-            it('Should have valid URI', async () => {
-                expect(plugin.URI.origin).toMatch(/^http/);
-                //const response = await fetch(plugin.URI);
-                //expect(response.url).toBe(plugin.URI.href);
-            });
+            const missing = expected.filter(id => !testee.WebsitePlugins.some(plugin => plugin.Identifier === id));
+
+            expect(missing).toEqual([]);
+        });
+
+        describe.each(new TestFixture().CreateTestee().WebsitePlugins)('$Title', plugin => {
 
             it('Should have mandatory tags', async () => {
                 const expected = {
@@ -87,6 +87,12 @@ describe('PluginController', () => {
                     //expect.soft(actual.source).not.toHaveLength(0);
                     expect.soft(actual.language).not.toHaveLength(0);
                 }
+            });
+
+            it('Should have unique tags', async () => {
+                const tags = plugin.Tags.Value.map(tag => `${tag.Category}/${tag.Title}`);
+                const unique = [ ...new Set(tags).values() ];
+                expect(tags).toStrictEqual(unique);
             });
         });
     });

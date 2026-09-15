@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'vermangasporno',
         title: 'VerMangasPorno'
-    }, /* CloudFlare
+    },
     container: {
-        url: 'https://vermangasporno.com/doujin/121928.html',
-        id: '/doujin/121928.html',
+        url: 'https://vermangasporno.com/doujins/kusui-aruta-hayaoki-wa-oo-no-toku/',
+        id: '/doujins/kusui-aruta-hayaoki-wa-oo-no-toku/',
         title: '[Kusui Aruta] Hayaoki wa OO no Toku'
     },
     child: {
-        id: '/doujin/121928.html',
+        id: '/doujins/kusui-aruta-hayaoki-wa-oo-no-toku/',
         title: '[Kusui Aruta] Hayaoki wa OO no Toku'
     },
     entry: {
         index: 0,
-        size: 266_355,
+        size: 285_875, //266_355
         type: 'image/jpeg'
-    }*/
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+    }
+}).AssertWebsite();

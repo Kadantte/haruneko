@@ -1,17 +1,15 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-//user  paste a "manga" link
-const configManga = {
+// user paste a "manga" link (a category)
+new TestFixture({
     plugin: {
         id: 'multporn',
         title: 'MultPorn'
     },
     container: {
-        url: 'https://multporn.net/hentai_manga/azur_lane',
-        id: '/hentai_manga/azur_lane',
+        url: 'https://multporn.com/manga/azur_lane',
+        id: '/manga/azur_lane',
         title: 'Azur Lane',
-        timeout: 15000
     },
     child: {
         id: '/hentai_manga/a_maids_duty',
@@ -19,25 +17,21 @@ const configManga = {
     },
     entry: {
         index: 1,
-        size: 619_504,
+        size: 526_291,
         type: 'image/png'
     }
-};
+}).AssertWebsite();
 
-const fixtureManga = new TestFixture(configManga);
-describe(fixtureManga.Name, async () => (await fixtureManga.Connect()).AssertWebsite());
-
-//user directly paste a "chapter" link
-const configChapter = {
+// user directly paste a "chapter" link (a 'manga')
+new TestFixture({
     plugin: {
         id: 'multporn',
         title: 'MultPorn'
     },
     container: {
-        url: 'https://multporn.net/hentai_manga/a_maids_duty',
-        id: '/hentai_manga/azur_lane',
+        url: 'https://multporn.com/hentai_manga/a_maids_duty',
+        id: '/manga/azur_lane',
         title: 'Azur Lane',
-        timeout: 15000
     },
     child: {
         id: '/hentai_manga/a_maids_duty',
@@ -45,10 +39,7 @@ const configChapter = {
     },
     entry: {
         index: 1,
-        size: 619_504,
+        size: 526_291,
         type: 'image/png'
     }
-};
-
-const fixtureChapter = new TestFixture(configChapter);
-describe(fixtureChapter.Name, async () => (await fixtureChapter.Connect()).AssertWebsite());
+}).AssertWebsite();

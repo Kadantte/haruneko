@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'xxxyaoi',
         title: 'XXXYaoi'
@@ -20,7 +19,4 @@ const config = {
         size: 234_602,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

@@ -21,12 +21,16 @@ const manifest = {
     url: pkgConfig.url,
     'node-remote': [
         'http://localhost/*',
-        `${new URL(pkgConfig.url).origin}/*`
+        'https://localhost/*',
+        'https://app.hakuneko.ovh/*',
+        'https://app.hakuneko.download/*',
+        'https://*.hakuneko.workers.dev/*',
+        `${new URL(pkgConfig.url).origin}/*`,
     ],
-    'chromium-args': null,
+    'user-data-dir': null,
     'user-agent': targetConfig['user-agent'] ?? null,
     dependencies: pkgConfig.dependencies
 };
 
 await fs.writeFile(targetFile, JSON.stringify(manifest, null, 4));
-await run('npm install --only=production', dirBuild);
+await run('npm install --omit=dev', dirBuild);

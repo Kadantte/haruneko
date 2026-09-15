@@ -1,8 +1,18 @@
 <script lang="ts">
     import { crossfade, fade } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
-    import { createEventDispatcher, onDestroy, onMount } from 'svelte';
-    const dispatch = createEventDispatcher();
+    import { onDestroy, onMount } from 'svelte';
+    // Events
+
+    interface Props {
+        item: MediaContainer<MediaItem>;
+        currentImageIndex: number;
+        wide: boolean;
+        onNextItem: () => void;
+        onPreviousItem: () => void;
+        onClose: () => void;
+    };
+
     // UI
     import { InlineNotification } from 'carbon-components-svelte';
     // engine
@@ -14,22 +24,11 @@
     import ImageViewerWideSettings from './ImageViewerWideSettings.svelte';
     import Image from './Image.svelte';
     // stores
-    import {
-        Key,
-        ViewerMode,
-        ViewerPadding,
-        ViewerZoom,
-        ViewerZoomRatio,
-        ViewerReverseDirection,
-    } from '../../stores/Settings';
-    import { selectedItemNext } from '../../stores/Stores';
+    import { Key, Settings } from '../../stores/Settings.svelte';
+    import { Store as UI } from '../../stores/Stores.svelte';
     // others
     import { scrollSmoothly, scrollMagic, toggleFullScreen } from './utilities';
     import { dragscroll } from '@svelte-put/dragscroll';
-
-    export let item: MediaContainer<MediaItem>;
-    export let currentImageIndex: number = -1;
-    export let wide: Boolean;
 
     onMount(() => {
         viewer.addEventListener('scroll', onScroll);
@@ -38,17 +37,15 @@
     onDestroy(() => {
         document.removeEventListener('keydown', onKeyDown);
         viewer?.removeEventListener('scroll', onScroll);
-        zoomunsubscribe();
     });
 
-    $: entries = item.Entries.Value;
-
-    const title = item?.Title ?? 'unkown';
+    let { item, currentImageIndex, wide = $bindable(), onNextItem, onPreviousItem, onClose }: Props = $props();
+    let entries = $derived(item.Entries.Value);
     let viewer: HTMLElement;
 
-    function onClose() {
+    function viewerclose() {
         wide = false;
-        dispatch('close');
+        onClose();
     }
 
     function onKeyDown(event: KeyboardEvent) {
@@ -74,31 +71,31 @@
                 });
                 break;
             case event.code === 'ArrowRight':
-                dispatch('nextItem');
+                onNextItem();
                 break;
             case event.code === 'ArrowLeft':
-                dispatch('previousItem');
+                onPreviousItem();
                 break;
             case event.key === '*':
-                $ViewerZoom = 100;
+                Settings.ViewerZoom.Value = 100;
                 break;
             case event.key === '/':
-                ViewerZoom.reset();
+                Settings.ViewerZoom.Value=Settings.ViewerZoom.Setting.Default;
                 break;
             case event.key === '+' && !event.ctrlKey:
-                ViewerZoom.increment();
+                Settings.ViewerZoom.Increment();
                 break;
             case event.key === '-' && !event.ctrlKey:
-                ViewerZoom.decrement();
+                Settings.ViewerZoom.Decrement();
                 break;
             case event.key === '+' && event.ctrlKey:
-                ViewerPadding.increment();
+                Settings.ViewerPadding.Increment();
                 break;
             case event.key === '-' && event.ctrlKey:
-                ViewerPadding.decrement();
+                Settings.ViewerPadding.Decrement();
                 break;
             case event.code === 'Escape':
-                onClose();
+                viewerclose();
                 break;
             case event.code === 'Space':
                 scrollMagic(
@@ -106,6 +103,7 @@
                     '.imgpreview',
                     window.innerHeight * 0.8,
                     onNextItemCallback,
+                    Settings.ViewerMode.Value === Key.ViewerMode_Paginated,
                 );
                 event.preventDefault();
                 break;
@@ -114,31 +112,12 @@
         }
     }
 
-    let previousZoom = $ViewerZoomRatio;
-    const zoomunsubscribe = ViewerZoomRatio.subscribe((newZoom) => {
-        switch ($ViewerMode) {
-            case Key.ViewerMode_Longstrip: {
-                viewer?.scrollTo({
-                    top: viewer.scrollTop * (newZoom / previousZoom),
-                    behavior: 'smooth',
-                });
-                break;
-            }
-            case Key.ViewerMode_Paginated: {
-                viewer?.scrollTo({
-                    left: viewer.scrollLeft * (newZoom / previousZoom),
-                    behavior: 'smooth',
-                });
-                break;
-            }
-        }
-        previousZoom = newZoom;
-    });
+
 
     // Auto next item after reaching end of page
-    let autoNextItem = false;
+    let autoNextItem = $state(false);
     async function onNextItemCallback() {
-        if (autoNextItem && selectedItemNext) dispatch('nextItem');
+        if (autoNextItem && UI.selectedItemNext) onNextItem();
         else {
             autoNextItem = true;
             setTimeout(function () {
@@ -154,66 +133,80 @@
         }
     }
 
+    // Preload next item once all images of the current item finished loading
+    let loadedImageCount = $state(0);
+    $effect(() => {
+        entries; // reset counter whenever the item changes
+        loadedImageCount = 0;
+    });
+
+    function onImageLoaded() {
+        loadedImageCount++;
+        if (entries.length > 0 && loadedImageCount === entries.length) {
+            if (UI.selectedItemNext && Settings.ViewerPreloadNextItem.Value) preloadItem(UI.selectedItemNext);
+        }
+    }
+
+    function preloadItem(item: MediaContainer<MediaItem>) {
+        if (item.Entries && item.Entries.Value.length > 0) return;
+        item.Update();
+    }
+
     // Drag and drop scroll
     let pos = { top: 0, left: 0, x: 0, y: 0 };
 
-    // Dynamic css values
-    $: cssvars = {
-        'viewer-padding': `${$ViewerPadding}em`,
-    };
-    $: cssVarStyles = Object.entries(cssvars)
-        .map(([key, value]) => `--${key}:${value}`)
-        .join(';');
-
     // Entering wide mode : scroll to image
-    $: if (wide) {
-        if (currentImageIndex != -1) {
-            // delay because of smooth transition
-            setTimeout(() => {
-                const targetScrollImage =
-                    viewer.querySelectorAll('ImageViewer>img')[
-                        currentImageIndex
-                    ];
-                targetScrollImage?.scrollIntoView({
-                    behavior: 'smooth',
-                    inline: 'center',
-                });
-                currentImageIndex = -1;
-            }, 200);
+    $effect(() => {
+        if (wide) {
+            if (currentImageIndex != -1) {
+                // delay because of smooth transition
+                setTimeout(() => {
+                    const targetScrollImage =
+                        viewer.querySelectorAll('#ImageViewer>button>img')[
+                            currentImageIndex
+                        ];
+                    targetScrollImage?.scrollIntoView({
+                        inline: 'center',
+                    });
+                    currentImageIndex = -1;
+                }, 200);
+            }
+            document.addEventListener('keydown', onKeyDown);
+        } else {
+            document.removeEventListener('keydown', onKeyDown);
+            if (viewer) viewer.style.userSelect = 'none';
         }
-        document.addEventListener('keydown', onKeyDown);
-    } else {
-        document.removeEventListener('keydown', onKeyDown);
-        if (viewer) viewer.style.userSelect = 'none';
-    }
+    });
 
     const [send, receive] = crossfade({
         duration: 1500,
         easing: quintOut,
     });
+    const ViewerPadding = $derived(Settings.ViewerPadding.Value+'em');
 </script>
-
+{#if wide}
+    <ImageViewerWideSettings
+        {item}
+        {onNextItem}
+        {onPreviousItem}
+        onClose={viewerclose}
+    />
+{/if}
 <div
     id="ImageViewer"
     bind:this={viewer}
     role="button"
     tabindex="-1"
-    on:dblclick={() => toggleFullScreen()}
+    ondblclick={() => toggleFullScreen()}
     transition:fade
-    class="{wide ? 'wide' : 'thumbnail'} {$ViewerMode} {$ViewerReverseDirection
-        ? 'reverse'
-        : ''}"
-    style={cssVarStyles}
+    class:wide={wide}
+    class:reverse={Settings.ViewerReverseDirection.Value}
+    class="{Settings.ViewerMode.Value}"
+    style:--viewer-padding={ViewerPadding}
+    style:--image-zoom={Settings.ViewerZoomRatio}
     use:dragscroll={{ axis: 'both' }}
 >
-    {#if wide}
-        <ImageViewerWideSettings
-            {item}
-            on:nextItem
-            on:previousItem
-            on:close={onClose}
-        />
-    {/if}
+
     {#if entries.length === 0}
         <div class="center" style="width:100%;height:100%;">
             <InlineNotification
@@ -227,31 +220,30 @@
 
     {#each entries as content, index (index)}
         <button
-            on:click={() => {
+            onclick={() => {
                 currentImageIndex = index;
                 wide = true;
             }}
-            on:keypress
             in:send={{ key: index }}
             out:receive={{ key: index }}
         >
             <Image
-                class={wide ? 'wide' : 'thumbnail'}
+                {wide}
                 alt="content_{index}"
                 page={content}
+                onLoad={onImageLoaded}
             />
         </button>
     {/each}
 </div>
-{#if autoNextItem && $selectedItemNext !== undefined}
-    <div transition:fade>
+{#if autoNextItem && UI.selectedItemNext !== undefined}
+    <div  style="z-index: 20000; position: fixed; bottom: 2em; right: 2em;" transition:fade>
         <InlineNotification
             kind="info"
             title="Bottom reached"
             subtitle="Click or Press space again to go to next item."
-            on:click={() => dispatch('nextitem')}
+            onclick={() => onNextItem()}
             on:close={() => (autoNextItem = false)}
-            style="z-index: 10000; position: fixed; bottom: 2em; right: 2em;"
         />
     </div>
 {/if}
@@ -265,7 +257,7 @@
         width: 100%;
         height: 100%;
     }
-    #ImageViewer.thumbnail {
+    #ImageViewer:not(.wide) {
         overflow-y: auto;
         display: flex;
         flex-wrap: wrap;
@@ -273,7 +265,7 @@
         align-content: flex-start;
     }
 
-    #ImageViewer.thumbnail :global(.imgpreview) {
+    #ImageViewer:not(.wide) :global(.imgpreview) {
         border: 2px solid var(--cds-ui-04);
         background-color: var(--cds-ui-01);
         box-shadow: 1em 1em 2em var(--cds-ui-01);
@@ -297,6 +289,9 @@
         gap: var(--viewer-padding);
         min-width: 0;
         min-height: 0;
+    }
+    #ImageViewer.wide :global(img.imgpreview)  {
+        zoom : var(--image-zoom);
     }
     #ImageViewer.wide.longstrip {
         display: flex;

@@ -8,33 +8,7 @@ class MediaContainerMock extends MediaContainer<MediaItem> {
     }
 }
 
-describe('Array<MediaContainer<MediaItem>>', () => {
-
-    describe('first()', () => {
-
-        it('Should return null when array is empty', async () => {
-            const actual = [].first();
-            expect(actual).toBeNull();
-        });
-
-        it('Should return first item in array', async () => {
-            const actual = [ 7, 'x', null, true ].first();
-            expect(actual).toBe(7);
-        });
-    });
-
-    describe('last()', () => {
-
-        it('Should return null when array is empty', async () => {
-            const actual = [].last();
-            expect(actual).toBeNull();
-        });
-
-        it('Should return last item in array', async () => {
-            const actual = [ true, null, 'x', 7 ].last();
-            expect(actual).toBe(7);
-        });
-    });
+describe('ArrayExtensions<T>', () => {
 
     describe('none()', () => {
 
@@ -69,6 +43,22 @@ describe('Array<MediaContainer<MediaItem>>', () => {
         it('Should return the number of elements satisfying the predicate', async () => {
             const actual = [ 1, 2, 3, 4, 5 ].count(n => n % 2 !== 0);
             expect(actual).toBe(3);
+        });
+    });
+
+    describe('joinTitleSegments', () => {
+
+        it.each([
+            [[], ''],
+            [['+'], '+'],
+            [[' +   + '], '+ +'],
+            [['+', '   ', '+'], '+ +'],
+            [['   ', '+', '   '], '+'],
+            [[' +   ', '   + '], '+ +'],
+            [[' # ', null, '', 0, undefined, ' ! '], '# 0 !'],
+        ])('Should concat filtered segments correctly', (segments, expected) => {
+            const actual = segments.joinTitleSegments();
+            expect(actual).toBe(expected);
         });
     });
 
@@ -116,6 +106,33 @@ describe('Array<MediaContainer<MediaItem>>', () => {
         it('Should be false when last item in source array is equivalent to last item in batch array', async () => {
             const actual = [ null, new MediaContainerMock('001', 'A') ].isMissingLastItemFrom([ null, new MediaContainerMock('001', 'A') ]);
             expect(actual).toBe(false);
+        });
+    });
+
+    describe('takeUntil()', () => {
+
+        it.each([
+            [ [ 1, 0, 0, 0, 0, 0, 0, 0 ], [ 1 ] ],
+            [ [ 1, 2, 0, 0, 0, 0, 0, 0 ], [ 1, 2 ] ],
+            [ [ 1, 2, 3, 0, 0, 0, 0, 0 ], [ 1, 2, 3 ] ],
+            [ [ 1, 2, 3, 4, 0, 0, 0, 0 ], [ 1, 2, 3, 4 ] ],
+            [ [ 1, 2, 3, 4, 5, 0, 0, 0 ], [ 1, 2, 3, 4, 5 ] ],
+            [ [ 1, 2, 3, 4, 5, 6, 0, 0 ], [ 1, 2, 3, 4, 5, 6 ] ],
+            [ [ 1, 2, 3, 4, 5, 6, 7, 0 ], [ 1, 2, 3, 4, 5, 6, 7 ] ],
+            [ [ 1, 2, 3, 4, 5, 6, 7, 8 ], [ 1, 2, 3, 4, 5, 6, 7, 8 ] ],
+        ])('Should take items from array based on predicate', async (testee, expected) => {
+            const actual = await testee.takeUntil(async item => item > 0);
+            expect(actual).toStrictEqual(expected);
+        });
+
+        it.each([
+            [ [ 1, 2, 3 ] ],
+            [ [ 1, 2, 3, 4, 5 ] ],
+            [ [ 1, 2, 3, 4, 5, 6 ] ],
+            [ [ 1, 2, 3, 4, 5, 6, 7 ] ],
+            [ [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] ],
+        ])('Should throw for invalid array length', async testee => {
+            await expect(testee.takeUntil(async () => true)).rejects.toThrow(RangeError);
         });
     });
 });

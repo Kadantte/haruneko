@@ -1,7 +1,6 @@
-import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'mangahot',
         title: 'マンガほっと (Manga Hot)'
@@ -18,10 +17,7 @@ const config = {
     },
     entry: {
         index: 0,
-        size: 1_466_160,
+        size: 1_907_067,
         type: 'image/png'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

@@ -1,7 +1,7 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const fixtureChapter = new TestFixture({
+// CASE: Chapter
+new TestFixture({
     plugin: {
         id: 'cycomi',
         title: 'CyComi'
@@ -12,7 +12,7 @@ const fixtureChapter = new TestFixture({
         title: 'あなたは私におとされたい'
     },
     child: {
-        id: '/chapter/page/list?titleId=156&chapterId=12036',
+        id: JSON.stringify({ id: 12036, type: 1 }),
         title: '第１話 - ジュウネンメノボクタチ'
     },
     entry: {
@@ -20,27 +20,26 @@ const fixtureChapter = new TestFixture({
         size: 219_613,
         type: 'image/jpeg'
     }
-});
-describe(fixtureChapter.Name, async () => (await fixtureChapter.Connect()).AssertWebsite());
+}).AssertWebsite();
 
-const fixtureVolume = new TestFixture({
+// CASE: Volume
+new TestFixture({
     plugin: {
         id: 'cycomi',
         title: 'CyComi'
     },
     container: {
-        url: 'https://cycomi.com/title/147',
-        id: '147',
-        title: 'JACK FOX　キツネ男と鋼鉄の女'
+        url: 'https://cycomi.com/title/193',
+        id: '193',
+        title: 'すきだから、だよ'
     },
     child: {
-        id: '/singleBook/detail?singleBookId=363',
-        title: '第１巻 - (1-10話)'
+        id: JSON.stringify({ id: 635, type: 2 }),
+        title: '第１巻 - (1-4話)'
     },
     entry: {
         index: 0,
-        size: 9_928,
+        size: 212_406,
         type: 'image/jpeg'
     }
-});
-describe(fixtureVolume.Name, async () => (await fixtureVolume.Connect()).AssertWebsite());
+}).AssertWebsite();

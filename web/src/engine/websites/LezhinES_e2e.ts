@@ -1,7 +1,6 @@
-import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'lezhin-es',
         title: 'Lezhin (Spanish)'
@@ -21,7 +20,4 @@ const config = {
         size: 531_808,
         type: 'image/webp'
     }*/
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

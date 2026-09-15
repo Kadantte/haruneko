@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'tempestscans',
         title: 'Tempest Scans'
     },
     container: {
-        url: 'https://tempestscans.com/manga/martial-peak/',
-        id: '/manga/martial-peak/',
-        title: 'Martial Peak'
+        url: 'https://juratempe.st/explore/yalniz-yukselis-ragnarok',
+        id: 'yalniz-yukselis-ragnarok',
+        title: 'Yalnız Yükseliş: Ragnarök'
     },
     child: {
-        id: '/martial-peak-3047/',
-        title: 'Bölüm: 3047'
+        id: '13',
+        title: 'Bölüm 13',
     },
     entry: {
-        index: 1,
-        size: 392_392,
-        type: 'image/jpeg'
+        index: 3,
+        size: 580_210,
+        type: 'image/avif'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

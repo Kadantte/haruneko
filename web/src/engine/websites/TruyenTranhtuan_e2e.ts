@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'truyentranhtuan',
-        title: 'TruyenTranhtuan'
+        title: 'TruyenTranhtuan',
     },
     container: {
-        url: 'https://truyentuan.com/huyen-thoai-giao-si-tro-lai/',
-        id: '/huyen-thoai-giao-si-tro-lai/',
-        title: 'Huyền Thoại Giáo Sĩ Trở Lại'
+        url: 'https://truyentranhtuan.me/ki-su-hoi-quy/',
+        id: '/ki-su-hoi-quy/',
+        title: 'Kí Sự Hồi Quy',
     },
     child: {
-        id: '/huyen-thoai-giao-si-tro-lai-chuong-98/',
-        title: '98'
+        id: '/ki-su-hoi-quy/chapter-177/',
+        title: 'Chapter 175', //not a typo
     },
     entry: {
-        index: 0,
-        size: 120_129,
-        type: 'image/jpeg'
+        index: 2,
+        size: 739_493,
+        type: 'image/jpeg',
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

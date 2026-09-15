@@ -6,13 +6,13 @@ import * as Common from './decorators/Common';
 
 @Common.MangaCSS(/^{origin}\/episode\/\d+$/, CoreView.queryMangaTitleFromURI)
 @Common.MangasNotSupported()
-@CoreView.ChaptersSinglePageCSS()
+@CoreView.ChaptersMultiPageAJAXV2()
 @CoreView.PagesSinglePageJSON()
 @CoreView.ImageAjax()
 export default class extends DecoratableMangaScraper {
 
     public constructor() {
-        super('ourfeel', `OurFeel`, 'https://ourfeel.jp', Tags.Language.Japanese, Tags.Source.Official, Tags.Media.Manga);
+        super('ourfeel', 'OurFeel', 'https://ourfeel.jp', Tags.Language.Japanese, Tags.Source.Official, Tags.Media.Manga);
     }
 
     public override get Icon() {

@@ -6,9 +6,10 @@
         "moduleResolution": "bundler",
         "skipLibCheck": true,
         "noEmit": true,
+        "types": [ "chrome", "nw.js" ]
     },
     "include": [
         "src/**/*.ts",
-        "src/**/*.d.ts",
+        "src/**/*.d.ts"
     ]
 }

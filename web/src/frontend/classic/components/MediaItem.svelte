@@ -1,58 +1,68 @@
 <script lang="ts">
-    import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+    import { onMount, onDestroy} from 'svelte';
     import { fade } from 'svelte/transition';
-    const dispatch = createEventDispatcher();
+
+    interface Props {
+        item: MediaContainer<MediaItem>;
+        selected: boolean;
+        hover: boolean;
+        multilang ?: boolean;
+        onView: (MouseEvent) => void;
+        onmouseup: (MouseEvent) => void;
+        onmousedown: (MouseEvent) => void;
+        onmouseenter: (MouseEvent) => void;
+        oncontextmenu: (MouseEvent) => void;
+    };
+    let { item, selected, hover , multilang = false, onView, onmouseup, onmousedown, onmouseenter, oncontextmenu }: Props  = $props();
 
     import { Button, ClickableTile } from 'carbon-components-svelte';
-    import {
-        BookmarkFilled as IconBookmarkFilled,
-        CloudDownload,
-        Download,
-        Error,
-        FolderOpen,
-        Pause,
-        PauseFuture,
-        View,
-        ViewFilled,
-        VolumeFileStorage,
-    } from 'carbon-icons-svelte';
-
-    import { Tags, type Tag } from '../../../engine/Tags';
-    const availableLanguageTags = Tags.Language.toArray();
-
-    // NOTE: This relies on all language tags having a unicode flag prefix in their corresponding `Title`
-    function extractUnicodeFlagFromTags(tags: Tag[]): string {
-        const languageTagTitleResourceKey = tags.find((tag) =>
-            availableLanguageTags.includes(tag),
-        )?.Title;
-        return (
-            $Locale[languageTagTitleResourceKey]
-                ?.call(undefined)
-                ?.slice(0, 4) ?? '🏴'
-        );
-    }
-
+    import BookmarkFilled from 'carbon-icons-svelte/lib/BookmarkFilled.svelte';
+    import CloudDownload from 'carbon-icons-svelte/lib/CloudDownload.svelte';
+    import Download from 'carbon-icons-svelte/lib/Download.svelte';
+    import EventIncident from 'carbon-icons-svelte/lib/EventIncident.svelte';
+    import FolderOpen from 'carbon-icons-svelte/lib/FolderOpen.svelte';
+    import Pause from 'carbon-icons-svelte/lib/Pause.svelte';
+    import PauseFuture from 'carbon-icons-svelte/lib/PauseFuture.svelte';
+    import View from 'carbon-icons-svelte/lib/View.svelte';
+    import ViewFilled from 'carbon-icons-svelte/lib/ViewFilled.svelte';
+    import VolumeFileStorage from 'carbon-icons-svelte/lib/VolumeFileStorage.svelte';
     import type {
-        StoreableMediaContainer,
         MediaItem,
+        MediaContainer,
+        StoreableMediaContainer,
     } from '../../../engine/providers/MediaPlugin';
     import {
         FlagType,
         type EntryFlagEventData,
     } from '../../../engine/ItemflagManager';
-    import { selectedItem } from '../stores/Stores';
-    import { Locale } from '../stores/Settings';
+    import { Store as UI } from '../stores/Stores.svelte';
     import { DownloadTask, Status } from '../../../engine/DownloadTask';
-    export let item: StoreableMediaContainer<MediaItem>;
-    export let selected: boolean;
-    export let hover: boolean;
-    export let multilang = false;
-    let flag: FlagType;
+    import { Key as GlobalKey } from '../../../engine/SettingsGlobal';
+    import type { Directory } from '../../../engine/SettingsManager';
+    import { GlobalSettings } from '../stores/Settings.svelte';
+    
+    import { Tags, type Tag } from '../../../engine/Tags';
+    const availableLanguageTags = Tags.Language.toArray();
+
+    // NOTE: This relies on all language tags having a unicode flag prefix in their corresponding `Title`
+    function extractUnicodeFlagFromTags(tags: ReadonlyArray<Tag>): string {
+        const languageTagTitleResourceKey = tags.find((tag) =>
+            availableLanguageTags.includes(tag),
+        )?.Title;
+        return (
+            GlobalSettings.Locale[languageTagTitleResourceKey]
+                ?.call(undefined)
+                ?.slice(0, 4) ?? '🏴'
+        );
+    }
+
+    let flag: FlagType = $state();
     const flagiconmap = new Map<FlagType, any>([
         [FlagType.Viewed, ViewFilled],
-        [FlagType.Current, IconBookmarkFilled],
+        [FlagType.Current, BookmarkFilled],
     ]);
-    $: flagicon = flagiconmap.get(flag) || View;
+
+    let flagicon = $derived(flagiconmap.get(flag) || View);
 
     async function OnFlagChangedCallback(flagData: EntryFlagEventData) {
         if (flagData.Entry === item) {
@@ -75,7 +85,8 @@
         HakuNeko.DownloadManager.Queue.Unsubscribe(taskQueueChanged);
     });
 
-    let downloadTask: DownloadTask;
+    let downloadTask: DownloadTask = $state();
+    let downloadTaskStatus: Status=$state();
 
     async function taskQueueChanged(tasks: DownloadTask[]) {
         downloadTask?.Status.Unsubscribe(refreshDownloadStatus);
@@ -83,65 +94,139 @@
         downloadTask?.Status.Subscribe(refreshDownloadStatus);
     }
     HakuNeko.DownloadManager.Queue.Subscribe(taskQueueChanged);
-
-    async function refreshDownloadStatus(_status: Status, _task: DownloadTask) {
-        downloadTask = downloadTask;
+    async function refreshDownloadStatus(newstatus: Status, _task: DownloadTask) {
+        downloadTaskStatus = newstatus;
     }
+
+    async function addDownload(item: StoreableMediaContainer<MediaItem>) {
+        try {
+            await HakuNeko.SettingsManager.OpenScope().Get<Directory>(GlobalKey.MediaDirectory).EnsureAccess();
+        } catch(error) {
+            // TODO: Use appropriate error visualization ...
+            alert(error?.message ?? error);
+            return;
+        }
+        await window.HakuNeko.DownloadManager.Enqueue(item);
+    }
+
+    async function removeDownload(task: DownloadTask) {
+        await window.HakuNeko.DownloadManager.Dequeue(task)
+    }
+
+    // TODO: download complete button should open file explorer
 </script>
 
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div
     class="listitem"
     role="listitem"
     in:fade
     class:selected
     class:hover
-    class:active={$selectedItem?.Identifier === item?.Identifier}
-    on:click
-    on:mousedown
-    on:mouseup
-    on:mouseenter
-    on:keypress
+    class:active={UI.selectedItem?.Identifier === item?.Identifier}
+    {onmouseup}
+    {onmousedown}
+    {onmouseenter}
+    {oncontextmenu}
 >
-    <Button
-        size="small"
-        kind="ghost"
-        tooltipPosition="right"
-        tooltipAlignment="end"
-        iconDescription="Download"
-        on:click={() => window.HakuNeko.DownloadManager.Enqueue(item)}
-    >
-        {#if downloadTask}
-            {@const status = downloadTask.Status.Value}
-            {#if status === Status.Queued}
-                <PauseFuture fill="var(--cds-icon-secondary)" />
-            {:else if status === Status.Paused}
-                <Pause fill="var(--cds-toggle-off)" />
-            {:else if status === Status.Downloading}
-                <Download fill="var(--cds-support-info)" />
-            {:else if status === Status.Processing}
-                <VolumeFileStorage fill="var(--cds-support-info)" />
-            {:else if status === Status.Failed}
-                <Error fill="var(--cds-support-error-inverse)" />
-            {:else if status === Status.Completed}
-                <FolderOpen fill="var(--cds-support-03)" />
-            {:else}
-                <CloudDownload fill="var(--cds-icon-01)" />
-            {/if}
-        {:else}
+    {#if !downloadTaskStatus}
+        <Button
+            role="download"
+            size="small"
+            kind="ghost"
+            tooltipPosition="right"
+            tooltipAlignment="end"
+            icon={CloudDownload}
+            iconDescription="Download"
+            onclick={() => addDownload(item as StoreableMediaContainer<MediaItem>)}
+        />
+    {:else if downloadTaskStatus === Status.Queued}
+        <Button
+            size="small"
+            kind="ghost"
+            tooltipPosition="right"
+            tooltipAlignment="end"
+            iconDescription="Cancel"
+            onclick={() => addDownload(item as StoreableMediaContainer<MediaItem>)}
+        >
+            <PauseFuture fill="var(--cds-icon-secondary)" />
+        </Button>
+    {:else if downloadTaskStatus === Status.Paused}
+        <Button
+            size="small"
+            kind="ghost"
+            tooltipPosition="right"
+            tooltipAlignment="end"
+            iconDescription="Cancel (paused)"
+            onclick={() => removeDownload(downloadTask)}
+        >
+            <Pause fill="var(--cds-toggle-off)" />
+        </Button>
+    {:else if downloadTaskStatus === Status.Downloading}
+        <Button
+            size="small"
+            kind="ghost"
+            tooltipPosition="right"
+            tooltipAlignment="end"
+            iconDescription="Cancel (downloading...)"
+            onclick={() => removeDownload(downloadTask)}
+        >
+            <Download fill="var(--cds-support-info)" />
+        </Button>
+
+    {:else if downloadTaskStatus === Status.Processing}
+        <Button
+            size="small"
+            kind="ghost"
+            iconDescription="Cancel (processing...)"
+            onclick={() => removeDownload(downloadTask)}
+        >
+            <VolumeFileStorage fill="var(--cds-support-info)" />
+        </Button>
+    {:else if downloadTaskStatus === Status.Failed}
+        <Button
+            size="small"
+            kind="danger-ghost"
+            tooltipPosition="right"
+            tooltipAlignment="end"
+            icon={EventIncident}
+            iconDescription="Error: click to retry (detailed error in download tasks)"
+            onclick={() => downloadTask.Run()}
+        />
+    {:else if downloadTaskStatus === Status.Completed}
+        <Button
+            size="small"
+            kind="ghost"
+            tooltipPosition="right"
+            tooltipAlignment="end"
+            iconDescription="Download complete"
+            onclick={() => alert('Download complete. TODO: open folder using system explorer')}
+        >
+            <FolderOpen fill="var(--cds-support-03)" />
+        </Button>
+    {:else}
+        <Button
+            size="small"
+            kind="ghost"
+            tooltipPosition="right"
+            tooltipAlignment="end"
+            iconDescription="Download"
+            onclick={() => addDownload(item as StoreableMediaContainer<MediaItem>)}
+        >
             <CloudDownload fill="var(--cds-icon-01)" />
-        {/if}
-    </Button>
+        </Button>
+    {/if}
     <Button
+        role="preview"
         size="small"
         kind="ghost"
         icon={flagicon}
         tooltipPosition="right"
         tooltipAlignment="end"
         iconDescription="View"
-        on:click={(event) => dispatch('view', event)}
+        onclick={(event) => onView(event)}
     />
-    <ClickableTile class="title" on:click={(event) => dispatch('view', event)}>
+    <ClickableTile class="title" onclick={(event) => onView(event)}>
         {#if multilang}
             <span class="multilang">
                 {extractUnicodeFlagFromTags(item.Tags.Value)}
@@ -188,8 +273,8 @@
         min-height: unset;
         width: unset;
         min-width: unset;
-        padding-left: 0;
-        padding-right: 0;
+        padding-left: 0.3em;
+        padding-right:0;
     }
     .listitem :global(button:hover) {
         --cds-icon-01: var(--cds-hover-secondary);

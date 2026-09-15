@@ -1,14 +1,12 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'xmanga',
         title: 'XManga'
     },
-    /* CloudFlare
     container: {
-        url: 'https://x-manga.net/manga/konna-elf-ni-you-wa-nai/',
+        url: 'https://x-manga.org/manga/konna-elf-ni-you-wa-nai/',
         id: JSON.stringify({ post: '4237', slug: '/manga/konna-elf-ni-you-wa-nai/' }),
         title: 'Konna Elf ni You wa Nai'
     },
@@ -21,8 +19,4 @@ const config = {
         size: 613_473,
         type: 'image/jpeg'
     }
-    */
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

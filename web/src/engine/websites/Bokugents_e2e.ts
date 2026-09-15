@@ -1,5 +1,4 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
     plugin: {
@@ -8,12 +7,12 @@ const config = {
     },
     container: {
         url: 'https://bokugents.com/manga/yumemiru/',
-        id: JSON.stringify({ post: '2956', slug: '/manga/yumemiru/' }),
+        id: '/manga/yumemiru/',
         title: 'Yumemiru Danshi wa Genjitsushugisha'
     },
     child: {
-        id: '/manga/yumemiru/cap-31-1/',
-        title: 'Cap 31.1'
+        id: '/yumemiru-cap-33-1/',
+        title: 'Chapter 31.1'
     },
     entry: {
         index: 0,
@@ -22,5 +21,4 @@ const config = {
     }
 };
 
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+new TestFixture(config).AssertWebsite();

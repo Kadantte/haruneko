@@ -3,23 +3,23 @@ import icon from './HentaiRead.webp';
 import { DecoratableMangaScraper } from '../providers/MangaPlugin';
 import * as Common from './decorators/Common';
 
-const pageScript = `
-    new Promise( resolve => {
-        const pagelist = (window.chapterImages ?? window.chapter_preloaded_images);
-        resolve(pagelist.map(image => {
-            const uri = new URL(image.src);
-            uri.searchParams.set('quality', '100');
-            uri.searchParams.delete('w');
-            return uri.href;
-        }));
+@Common.MangaCSS(/^{origin}\/hentai\/[^/]+\/$/, 'div.manga-titles h1')
+@Common.MangasMultiPageCSS('div.manga-grid a.manga-item__link', Common.PatternLinkGenerator('/hentai/page/{page}/'), 150)
+@Common.ChaptersSinglePageCSS<HTMLAnchorElement>('section#mangaSummary a.block', undefined, anchor => ({
+    id: anchor.pathname,
+    title: anchor.querySelector<HTMLImageElement>('img').alt.trim()
+}))
+@Common.PagesSinglePageJS(`
+    new Promise(resolve => {
+        for (const value of Object.values(window).filter(value => typeof value === 'string')) {
+            try {
+                const { data : {chapter : { images }} } = JSON.parse(atob(value));
+                resolve(images.map(({ src }) => chapterExtraData.baseUrl+ '/'+ src));
+            } catch {}
+        }
     });
-`;
-
-@Common.MangaCSS(/^{origin}\/hentai\/[^/]+\/$/, 'div.post-title h1')
-@Common.MangasMultiPageCSS('/hentai/page/{page}/', 'div.post-title a')
-@Common.ChaptersSinglePageCSS('div.summary_image > a')
-@Common.PagesSinglePageJS(pageScript, 500)
-@Common.ImageElement(false, false, true)
+`, 1500)
+@Common.ImageAjax()
 export default class extends DecoratableMangaScraper {
 
     public constructor() {
@@ -29,5 +29,4 @@ export default class extends DecoratableMangaScraper {
     public override get Icon() {
         return icon;
     }
-
 }

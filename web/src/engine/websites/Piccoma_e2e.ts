@@ -1,7 +1,7 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const fixtureChapter = new TestFixture({
+// CASE: Provided in Chapters
+new TestFixture({
     plugin: {
         id: 'piccoma',
         title: 'Piccoma'
@@ -17,13 +17,13 @@ const fixtureChapter = new TestFixture({
     },
     entry: {
         index: 0,
-        size: 531_180,
+        size: 603_257,
         type: 'image/png'
     } */
-});
-describe(fixtureChapter.Name, () => fixtureChapter.AssertWebsite());
+}).AssertWebsite();
 
-const fixtureVolume = new TestFixture({
+// CASE: Provided in Volumes
+new TestFixture({
     plugin: {
         id: 'piccoma',
         title: 'Piccoma'
@@ -35,12 +35,12 @@ const fixtureVolume = new TestFixture({
     },
     child: {
         id: '367170',
-        title: '第1巻 (¥0)'
+        title: '1',
+        timeout: 60_000 // need to load all pictures, could take a while
     },
     entry: {
         index: 0,
-        size: 1_012_662,
+        size: 1_091_700,
         type: 'image/png'
     } */
-});
-describe(fixtureVolume.Name, () => fixtureVolume.AssertWebsite());
+}).AssertWebsite();

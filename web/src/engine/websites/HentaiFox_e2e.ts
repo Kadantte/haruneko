@@ -1,7 +1,7 @@
-﻿import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+// Old CDN
+new TestFixture({
     plugin: {
         id: 'hentaifox',
         title: 'HentaiFox'
@@ -20,7 +20,26 @@ const config: Config = {
         size: 151_623,
         type: 'image/jpeg'
     }
-};
+}).AssertWebsite();
 
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+// New CDN
+new TestFixture({
+    plugin: {
+        id: 'hentaifox',
+        title: 'HentaiFox'
+    },
+    container: {
+        url: 'https://hentaifox.com/gallery/142053/',
+        id: '/gallery/142053/',
+        title: 'Corrupt Researcher'
+    },
+    child: {
+        id: '/gallery/142053/',
+        title: 'Corrupt Researcher'
+    },
+    entry: {
+        index: 0,
+        size: 116_598,
+        type: 'image/webp'
+    }
+}).AssertWebsite();

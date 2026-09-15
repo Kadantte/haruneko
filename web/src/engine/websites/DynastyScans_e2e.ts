@@ -1,13 +1,12 @@
-﻿import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'dynasty-scans',
-        title: 'DynastyScans'
+        title: 'Dynasty Reader'
     },
     container: {
-        url: 'https://dynasty-scans.com/series/175160', //One Piece
+        url: 'https://dynasty-scans.com/series/175160',
         id: '/series/175160',
         title: '#175160#'
     },
@@ -20,7 +19,4 @@ const config: Config = {
         size: 1_183_399,
         type: 'image/png'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

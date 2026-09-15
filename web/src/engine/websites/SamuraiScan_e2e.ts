@@ -1,26 +1,22 @@
-import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'samuraiscan',
         title: 'Samurai Scan'
     },
     container: {
-        url: 'https://samuraiscan.ragnarokscanlation.net/dl/camino-celestial-del-maestro-marcial-estelar/',
-        id: JSON.stringify({ post: '39', slug: '/dl/camino-celestial-del-maestro-marcial-estelar/' }),
-        title: 'Camino Celestial del Maestro Marcial Estelar'
+        url: 'https://samurai.j5z.xyz/son/senda-del-emperador-astral/',
+        id: JSON.stringify({ post: '39', slug: '/son/senda-del-emperador-astral/' }),
+        title: 'Senda del Emperador Astral'
     },
     child: {
-        id: '/dl/camino-celestial-del-maestro-marcial-estelar/capitulo-1/',
+        id: '/son/senda-del-emperador-astral/capitulo-1/',
         title: 'Capitulo 1',
     },
     entry: {
-        index: 0,
-        size: 85_402,
+        index: 1,
+        size: 106_120,
         type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

@@ -1,26 +1,22 @@
-import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'webtoonhatti',
         title: 'Webtoon Hatti'
-    }/*, Pictures are region locked : need Turkish IP
+    },
     container: {
-        url: 'https://webtoonhatti.com/manga/.../',
-        id: JSON.stringify({ post: '0', slug: '/manga/.../' }),
-        title: 'Manga ?'
+        url: 'https://webtoonhatti.club/webtoon/suikascinin-kanunlari/',
+        id: JSON.stringify({ post: '22986', slug: '/webtoon/suikascinin-kanunlari/' }),
+        title: 'Suikasçının Kanunları'
     },
     child: {
-        id: '/manga/.../.../',
-        title: 'Chapter ?'
+        id: '/webtoon/suikascinin-kanunlari/bolum-28/',
+        title: 'Bölüm 28'
     },
     entry: {
         index: 0,
-        size: -1,
+        size: 1_082_948,
         type: 'image/jpeg'
-    }*/
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+    }
+}).AssertWebsite();

@@ -6,25 +6,25 @@
     import { DownloadTask, Status } from '../../../engine/DownloadTask';
     import DownloadManagerTask from './DownloadManagerTask.svelte';
 
-    let taskerror: DownloadTask;
-    let downloadTasks: DownloadTask[] = HakuNeko.DownloadManager.Queue.Value;
+    let taskerror: DownloadTask = $state();
+    let downloadTasks: DownloadTask[] = $state(HakuNeko.DownloadManager.Queue.Value);
 
     HakuNeko.DownloadManager.Queue.Subscribe((tasks) => {
         downloadTasks = tasks;
     });
 
-    $: groupedJobs = Object.groupBy(
+    let groupedJobs = $derived(Object.groupBy(
         downloadTasks,
         (elt) => elt.Media.Parent.Identifier,
-    );
+    ));
 
-    function update() {
-        groupedJobs = groupedJobs;
+    function onUpdate() {
+        downloadTasks = downloadTasks;
     }
 
     function copyErrorToClipBoard(task: DownloadTask) {
         let message = `${task.Media.Title}\r\n`;
-        message += task.Errors.map((error) => {
+        message += task.Errors.Value.map((error) => {
             return `${error.message}\r\n > ${error.stack}`;
         }).join('\r\n-------------------\r\n');
 
@@ -35,12 +35,13 @@
     }
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
     id="downloadmanager"
-    on:click|stopPropagation={() => {
+    onclick={(e) => {
         taskerror = undefined;
+        e.stopPropagation();
     }}
 >
     <div id="tasks">
@@ -58,53 +59,59 @@
                     ),
                 ).length}
                 <ExpandableTile tileCollapsedLabel="Details">
-                    <div slot="above">
-                        <h6>
-                            {mediajobs[0].Media.Parent.Title} [{mediajobs[0]
-                                .Media.Parent.Parent.Title}]
-                        </h6>
-                        <div class="total">
-                            <div
-                                class="bar val-processing"
-                                style:flex-basis="{(processing /
-                                    mediajobs.length) *
-                                    100}%"
-                            />
-                            <div
-                                class="bar val-completed"
-                                style:flex-basis="{(completed /
-                                    mediajobs.length) *
-                                    100}%"
-                            />
-                            <div
-                                class="bar val-failed"
-                                style:flex-basis="{(failed / mediajobs.length) *
-                                    100}%"
-                            />
-                            <div
-                                class="bar val-pending"
-                                style:flex-basis="{((mediajobs.length -
-                                    completed -
-                                    failed -
-                                    processing) /
-                                    mediajobs.length) *
-                                    100}%"
-                            />
+                    {#snippet above()}
+                                        <div >
+                            <h6>
+                                {mediajobs[0].Media.Parent.Title} [{mediajobs[0]
+                                    .Media.Parent.Parent.Title}]
+                            </h6>
+                            <div class="total">
+                                <div
+                                    class="bar val-processing"
+                                    style:flex-basis="{(processing /
+                                        mediajobs.length) *
+                                        100}%"
+                                ></div>
+                                <div
+                                    class="bar val-completed"
+                                    style:flex-basis="{(completed /
+                                        mediajobs.length) *
+                                        100}%"
+                                ></div>
+                                <div
+                                    class="bar val-failed"
+                                    style:flex-basis="{(failed / mediajobs.length) *
+                                        100}%"
+                                ></div>
+                                <div
+                                    class="bar val-pending"
+                                    style:flex-basis="{((mediajobs.length -
+                                        completed -
+                                        failed -
+                                        processing) /
+                                        mediajobs.length) *
+                                        100}%"
+                                ></div>
+                            </div>
                         </div>
-                    </div>
-                    <div slot="below" class="below">
-                        {#each mediajobs as job (job)}
-                            <DownloadManagerTask
-                                {job}
-                                bind:taskerror
-                                on:update={update}
-                            />
-                        {/each}
-                    </div>
+                                    {/snippet}
+                    {#snippet below()}
+                                        <div  class="below">
+                            {#each mediajobs as job (job)}
+                                <DownloadManagerTask
+                                    {job}
+                                    bind:taskerror
+                                    {onUpdate}
+                                ></DownloadManagerTask>
+                            {/each}
+                        </div>
+                    {/snippet}
                 </ExpandableTile>
             {/each}
         {:else}
-            <div><DocumentDownload size={32} /> No tasks in queues</div>
+            <div>
+                <DocumentDownload size={32}></DocumentDownload> No tasks in queues
+            </div>
         {/if}
     </div>
 
@@ -112,7 +119,6 @@
         <div
             id="taskerrors"
             transition:fly={{ x: 200, duration: 500 }}
-            on:click|stopPropagation
         >
             <div class="copy">
                 <CopyButton
@@ -120,10 +126,10 @@
                     copy={() => {
                         copyErrorToClipBoard(taskerror);
                     }}
-                />
+                ></CopyButton>
                 <h4>{taskerror.Media.Title}</h4>
             </div>
-            {#each taskerror.Errors as error}
+            {#each taskerror.Errors.Value as error}
                 <div>{error.message}</div>
                 <pre>{error.stack}</pre>
                 <hr />

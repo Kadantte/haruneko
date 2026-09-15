@@ -1,13 +1,12 @@
-﻿import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture( {
     plugin: {
         id: 'team1x1',
         title: 'Team X'
     },
     container: {
-        url: 'https://teamxnovel.com/series/villain-is-here',
+        url: 'https://olympustaff.com/series/villain-is-here',
         id: '/series/villain-is-here',
         title: 'Villain Is Here'
     },
@@ -20,7 +19,4 @@ const config: Config = {
         size: 989_982,
         type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

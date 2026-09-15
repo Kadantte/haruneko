@@ -1,26 +1,22 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'maidscan',
         title: 'Maid Scan'
     },
     container: {
-        url: 'https://maidscans.com/manga/avatar-o-ultimo-mestre-do-ar/',
-        id: JSON.stringify({ post: '3965', slug: '/manga/avatar-o-ultimo-mestre-do-ar/'}),
-        title: 'Avatar: O Último Mestre do Ar'
+        url: 'https://empreguetes.wtf/obras/deus-tigre-de-jangsan-1',
+        id: 'deus-tigre-de-jangsan-1',
+        title: 'Deus tigre de Jangsan'
     },
     child: {
-        id: '/manga/avatar-o-ultimo-mestre-do-ar/capitulo-03/',
-        title: 'Capítulo 03'
+        id: '/capitulo/239389',
+        title: 'Capítulo 37',
     },
     entry: {
-        index: 0,
-        size: 660_000,
-        type: 'image/jpeg'
+        index: 4,
+        size: 1_523_950,
+        type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

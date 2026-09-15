@@ -1,7 +1,6 @@
-import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'topcomicporno',
         title: 'Top Comic Porno'
@@ -17,10 +16,7 @@ const config = {
     },
     entry: {
         index: 3,
-        size: 319_468,
+        size: 361_558,
         type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

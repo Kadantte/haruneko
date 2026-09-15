@@ -1,18 +1,18 @@
 import { Tags } from '../Tags';
 import icon from './MerlinScans.webp';
-import { DecoratableMangaScraper } from '../providers/MangaPlugin';
-import * as Madara from './decorators/WordPressMadara';
+import { InitManga } from './templates/InitManga';
 import * as Common from './decorators/Common';
 
-@Madara.MangaCSS(/^{origin}\/manga\/[^/]+\/$/, 'ol.breadcrumb li:last-of-type a')
-@Madara.MangasMultiPageAJAX()
-@Madara.ChaptersSinglePageAJAXv2()
-@Madara.PagesSinglePageCSS()
-@Common.ImageAjax()
-export default class extends DecoratableMangaScraper {
+@Common.ChaptersMultiPageCSS<HTMLAnchorElement>('div.chapter-list a', Common.PatternLinkGenerator('{id}bolum/page/{page}/'), 0, anchor => ({
+    id: anchor.pathname,
+    title: anchor.querySelector('div.uk-flex-none').textContent.trim()
+}))
+@Common.PagesSinglePageJS(`[...document.querySelectorAll('#chapter-content img')].map(img=> img.dataset?.originalSrc ?? img.src);`, 1500)
+
+export default class extends InitManga {
 
     public constructor() {
-        super('merlinscans', 'Merlin Scans', 'https://merlinscans.com', Tags.Media.Manhwa, Tags.Media.Manhua, Tags.Language.Turkish, Tags.Source.Scanlator);
+        super('merlinscans', 'MerlinToon', 'https://merlintoon.com', Tags.Media.Manhwa, Tags.Media.Manhua, Tags.Language.Turkish, Tags.Source.Scanlator);
     }
 
     public override get Icon() {

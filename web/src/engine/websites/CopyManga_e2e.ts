@@ -1,26 +1,31 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture, type Config } from '../../../test/WebsitesFixture';
 
-const config = {
+const configGlobal: Config = {
     plugin: {
         id: 'copymanga',
-        title: 'CopyManga'
+        title: 'CopyManga',
     },
     container: {
-        url: 'https://copymanga.site/comic/zhanvmeizhabao',
-        id: 'zhanvmeizhabao',
-        title: '渣女沒渣報'
+        url: 'https://www.copy20.com/comic/zhanvmeizhabao',
+        id: '/comic/zhanvmeizhabao',
+        title: '渣女沒渣報',
     },
     child: {
-        id: '933b7a06-710e-11ee-84ec-55b00c27fb36',
-        title: '第01話'
+        id: '/comic/zhanvmeizhabao/chapter/933b7a06-710e-11ee-84ec-55b00c27fb36',
+        title: '第01話',
     },
     entry: {
         index: 0,
-        size: 156_108,
-        type: 'image/webp'
-    }
+        size: 171_250,
+        type: 'image/webp',
+    },
 };
 
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+// CASE: No Region (Global)
+new TestFixture(configGlobal).AssertWebsite();
+
+const configChinaMainland = { ...configGlobal };
+configChinaMainland.container.url = 'https://www.mangacopy.com/comic/zhanvmeizhabao';
+
+// CASE: Region China
+new TestFixture(configChinaMainland).AssertWebsite();

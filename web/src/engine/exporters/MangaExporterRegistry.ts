@@ -1,4 +1,5 @@
 import type { StorageController } from '../StorageController';
+import type { MangaExporter } from './MangaExporter';
 import { ImageDirectoryExporter } from './ImageDirectoryExporter';
 import { ComicBookArchiveExporter } from './ComicBookArchiveExporter';
 import { ElectronicPublicationExporter } from './ElectronicPublicationExporter';
@@ -30,12 +31,12 @@ export enum MangaExportFormat {
      */
     EPUB = 'application/epub+zip',
     /**
-     * Save images from website in a document, non-compliant images will be converted to JPEG @ q=95%
+     * Save images from website in a document, non-compliant images will be converted to JPEG with q=95%
      */
     PDF = 'application/pdf',
 }
 
-export function CreateChapterExportRegistry(storageController: StorageController) {
+export function CreateChapterExportRegistry(storageController: StorageController): Record<string, MangaExporter> {
     return {
         [MangaExportFormat.RAWs]: new ImageDirectoryExporter(storageController),
         [MangaExportFormat.CBZ]: new ComicBookArchiveExporter(storageController),

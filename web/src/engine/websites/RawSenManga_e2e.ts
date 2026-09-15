@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'rawsenmanga',
         title: 'RawSenManga'
     },
     container: {
-        url: 'https://raw.senmanga.com/akuyaku-reijou-no-shitsuji-sama-hametsu-flag-wa-ore-ga-tsubusasete-itadakimasu',
-        id: '/akuyaku-reijou-no-shitsuji-sama-hametsu-flag-wa-ore-ga-tsubusasete-itadakimasu',
-        title: 'Akuyaku Reijou no Shitsuji-sama: Hametsu Flag wa Ore ga Tsubusasete itadakimasu'
+        url: 'https://raw.senmanga.com/one-piece',
+        id: 'one-piece',
+        title: 'One Piece'
     },
     child: {
-        id: '/akuyaku-reijou-no-shitsuji-sama-hametsu-flag-wa-ore-ga-tsubusasete-itadakimasu/29.1',
-        title: 'Chapter 29.1'
+        id: '1170.243648',
+        title: 'Chapter 1170'
     },
     entry: {
         index: 0,
-        size: 122_414,
-        type: 'image/webp'
+        size: 507_052,
+        type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

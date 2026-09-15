@@ -1,7 +1,6 @@
-import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture ({
     plugin: {
         id: 'nhentai',
         title: 'NHentai'
@@ -9,18 +8,15 @@ const config = {
     container: {
         url: 'https://nhentai.net/g/514707/',
         id: '/g/514707/',
-        title: '(C94) [PowderSkin (うらはるこん)] IchimotsuがあるinHose'
+        title: '[PowderSkin (Uraharukon)] Ichimotsu ga Aru inHose [Digital]'
     },
     child: {
         id: '/g/514707/',
-        title: '(C94) [PowderSkin (うらはるこん)] IchimotsuがあるinHose'
+        title: '[PowderSkin (Uraharukon)] Ichimotsu ga Aru inHose [Digital]'
     },
     entry: {
         index: 1,
         size: 152_501,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

@@ -1,27 +1,23 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const mangaID = encodeURI('/jp-manga/俺だけレベルアップな件/');
-const config = {
+const mangaID = encodeURI('/manga/俺だけレベルアップな件-raw-free/');
+new TestFixture({
     plugin: {
         id: 'rawxz',
-        title: 'RawXZ'
+        title: 'RawZO'
     },
     container: {
-        url: 'https://rawxz.si/jp-manga/俺だけレベルアップな件/',
-        id: JSON.stringify({ post: '37494', slug: mangaID }),
+        url: 'https://rawmiu.top/manga/俺だけレベルアップな件-raw-free/',
+        id: mangaID,
         title: '俺だけレベルアップな件',
     },
     child: {
-        id: mangaID.toLowerCase() + encodeURI('第185話/').toLowerCase(),
-        title: '第185話'
+        id: `${mangaID.toLowerCase()}chapter-184/`,
+        title: '第 184'
     },
     entry: {
         index: 0,
-        size: 394_357,
+        size: 242_580,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

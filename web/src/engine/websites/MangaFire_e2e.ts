@@ -1,50 +1,93 @@
-﻿import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
-const configVolume = {
+// CASE: Chapter (English)
+new TestFixture({
     plugin: {
         id: 'mangafire',
         title: 'MangaFire'
     },
     container: {
-        url: 'https://mangafire.to/manga/vagabond.4mx',
-        id: '/manga/vagabond.4mx',
-        title: 'Vagabond'
+        url: 'https://mangafire.to/title/qnlvj-vagabond22',
+        id: 'qnlvj',
+        title: 'Vagabond',
+        timeout: 10_000
     },
     child: {
-        id: JSON.stringify({ itemid: '140775', itemtype: 'volume', language: 'en' }),
-        title: 'Vol 38: (en)'
+        id: 'chapters/7180211',
+        title: 'Ch. 25 (Colored Council) (official) (en)'
     },
     entry: {
         index: 2,
-        size: 156_390,
+        size: 603_549,
         type: 'image/jpeg'
     }
-};
+}).AssertWebsite();
 
-const fixtureVolume = new TestFixture(configVolume);
-describe(fixtureVolume.Name, async () => (await fixtureVolume.Connect()).AssertWebsite());
-
-const configChapter = {
+// CASE: Chapter (Japanese)
+new TestFixture({
     plugin: {
         id: 'mangafire',
         title: 'MangaFire'
     },
     container: {
-        url: 'https://mangafire.to/manga/vagabond.4mx',
-        id: '/manga/vagabond.4mx',
-        title: 'Vagabond'
+        url: 'https://mangafire.to/title/qnlvj-vagabond22',
+        id: 'qnlvj',
+        title: 'Vagabond',
+        timeout: 10_000
     },
     child: {
-        id: JSON.stringify({ itemid: '1552876', itemtype: 'chapter', language: 'en' }),
-        title: 'Chap 326: To Be A Samurai (en)'
+        id: 'chapters/5872243',
+        title: 'Ch. 25 吉岡騒然 (unofficial) (ja)'
     },
     entry: {
-        index: 0,
-        size: 353_323,
+        index: 2,
+        size: 676_379,
         type: 'image/jpeg'
     }
-};
+}).AssertWebsite();
 
-const fixtureChapter = new TestFixture(configChapter);
-describe(fixtureChapter.Name, async () => (await fixtureChapter.Connect()).AssertWebsite());
+// CASE: Volume (English)
+new TestFixture({
+    plugin: {
+        id: 'mangafire',
+        title: 'MangaFire'
+    },
+    container: {
+        url: 'https://mangafire.to/title/qnlvj-vagabond22',
+        id: 'qnlvj',
+        title: 'Vagabond',
+        timeout: 10_000
+    },
+    child: {
+        id: 'volumes/233258',
+        title: 'Vol. 10 (en)'
+    },
+    entry: {
+        index: 2,
+        size: 566_057,
+        type: 'image/jpeg'
+    }
+}).AssertWebsite();
+
+// CASE: Volume (Japanese)
+new TestFixture({
+    plugin: {
+        id: 'mangafire',
+        title: 'MangaFire'
+    },
+    container: {
+        url: 'https://mangafire.to/title/qnlvj-vagabond22',
+        id: 'qnlvj',
+        title: 'Vagabond',
+        timeout: 10_000
+    },
+    child: {
+        id: 'volumes/152231',
+        title: 'Vol. 10 (ja)'
+    },
+    entry: {
+        index: 2,
+        size: 797_915,
+        type: 'image/jpeg'
+    }
+}).AssertWebsite();

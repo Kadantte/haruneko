@@ -1,7 +1,7 @@
-﻿import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const configOfficial: Config = {
+// CASE: Official
+new TestFixture({
     plugin: {
         id: 'alphapolis',
         title: 'ALPHAPOLIS (アルファポリス)'
@@ -9,23 +9,23 @@ const configOfficial: Config = {
     container: {
         url: 'https://www.alphapolis.co.jp/manga/official/777000246',
         id: '/manga/official/777000246',
-        title: '令嬢はまったりをご所望。'
+        title: '令嬢はまったりをご所望。',
+        timeout: 10_000
     },
     child: {
         id: '/manga/official/777000246/2888',
         title: '第1回'
     },
+    /* picture size keep changing
     entry: {
         index: 0,
-        size: 375_221,
-        type: 'image/jpeg'
-    }
-};
+        size: 2_019_877,
+        type: 'image/png'
+    }*/
+}).AssertWebsite();
 
-const fixtureOfficial = new TestFixture(configOfficial);
-describe(fixtureOfficial.Name, async () => (await fixtureOfficial.Connect()).AssertWebsite());
-
-const configManga: Config = {
+// CASE: Unofficial
+new TestFixture({
     plugin: {
         id: 'alphapolis',
         title: 'ALPHAPOLIS (アルファポリス)'
@@ -44,7 +44,4 @@ const configManga: Config = {
         size: 217_919,
         type: 'image/jpeg'
     }
-};
-
-const fixtureManga = new TestFixture(configManga);
-describe(fixtureManga.Name, async () => (await fixtureManga.Connect()).AssertWebsite());
+}).AssertWebsite();

@@ -1,13 +1,12 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'on-manga',
         title: 'مانجا اون لاين (On-Manga)'
     },
     container: {
-        url: 'https://onma.me/manga/chainsaw-man',
+        url: 'https://www.onma.top/manga/chainsaw-man',
         id: '/manga/chainsaw-man',
         title: 'Chainsaw Man'
     },
@@ -20,7 +19,4 @@ const config = {
         size: 767_631,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

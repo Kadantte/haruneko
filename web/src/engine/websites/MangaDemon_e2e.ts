@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'mangademon',
         title: 'MangaDemon'
     },
     container: {
-        url: 'https://mgdemon.org/manga/Martial-Peak-VA54',
-        id: '/manga/Martial-Peak-VA54',
+        url: 'https://demonicscans.org/manga/Martial-Peak',
+        id: '/manga/Martial-Peak',
         title: 'Martial Peak'
     },
     child: {
-        id: '/manga/Martial-Peak/chapter/3670-VA54',
+        id: '/chaptered.php?manga=1&chapter=3670',
         title: '3670'
     },
     entry: {
         index: 0,
-        size: 328_479,
+        size: 138_422,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

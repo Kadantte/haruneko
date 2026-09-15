@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'mangapro',
-        title: 'Manga Pro'
+        title: 'ProChan'
     },
     container: {
-        url: 'https://promanga.pro/manga/i-eat-soft-rice-in-another-world/',
-        id: '/manga/i-eat-soft-rice-in-another-world/',
-        title: 'I Eat Soft Rice In Another World'
+        url: 'https://prochan.net/series/manhua/399/awakening-sss-rank-skill-after-a-kiss',
+        id: '/series/manhua/399/awakening-sss-rank-skill-after-a-kiss',
+        title: 'Awakening SSS-Rank skill after a Kiss'
     },
     child: {
-        id: '/i-eat-soft-rice-in-another-world-0/',
-        title: 'الفصل 0',
+        id: '/series/manhua/399/awakening-sss-rank-skill-after-a-kiss/22222/91',
+        title: 'Chapter 91',
     },
     entry: {
         index: 0,
-        size: 2_728_927,
-        type: 'image/jpeg'
+        size: 298_990,
+        type: 'image/avif'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

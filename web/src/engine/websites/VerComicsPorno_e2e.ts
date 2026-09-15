@@ -1,11 +1,10 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'vercomicsporno',
         title: 'VerComicsPorno'
-    }, /* CloudFlare
+    },
     container: {
         url: 'https://vercomicsporno.com/ghostlessm-hot-lessons-chapter-1-justice-league',
         id: '/ghostlessm-hot-lessons-chapter-1-justice-league',
@@ -19,8 +18,5 @@ const config = {
         index: 0,
         size: 235_831,
         type: 'image/jpeg'
-    }*/
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+    }
+}).AssertWebsite();

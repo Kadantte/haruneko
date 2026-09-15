@@ -1,5 +1,4 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
     plugin: {
@@ -7,7 +6,7 @@ const config = {
         title: 'Luna Scans'
     },
     container: {
-        url: 'https://lunascans.fun/manga/yilan-ve-serce/',
+        url: 'https://tuhafscans.com/manga/yilan-ve-serce/',
         id: JSON.stringify({ post: '4725', slug: '/manga/yilan-ve-serce/' }),
         title: 'Suzuhebi Kyuuairon'
     },
@@ -22,5 +21,4 @@ const config = {
     }
 };
 
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+new TestFixture(config).AssertWebsite();

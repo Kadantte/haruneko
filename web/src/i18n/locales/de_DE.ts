@@ -76,7 +76,6 @@ const translations: VariantResource = { // NOTE: Use defaults for missing transl
   Frontend_Classic_Sidenav_Settings_General: "Allgemein",
   Frontend_Classic_Sidenav_Settings_Interface: "Benutzeroberfläche",
   Frontend_Classic_Sidenav_Settings_Trackers: "Tracking Platform",
-  Frontend_Classic_Sidenav_Settings_Network: "Netzwerk",
   // [SECTION]: Frontend FluentCore
   Frontend_FluentCore_Label: 'Fluent Core',
   Frontend_FluentCore_Description: "Eine einfache Benutzeroberfläche mit reduzierter Ausstattung, vor allem für Entwickler, um wichtige Funktionalität schnell zu überprüfen",
@@ -93,9 +92,12 @@ const translations: VariantResource = { // NOTE: Use defaults for missing transl
   Frontend_FluentCore_Menu_ImportBookmarks_Description: "Importieren aller Lesezeichen aus einer Datei (vorhandene Lesezeichen bleiben bestehen)",
   Frontend_FluentCore_Menu_ExportBookmarks_Label: "Lesezeichen exportieren…",
   Frontend_FluentCore_Menu_ExportBookmarks_Description: "Exportieren aller Lesezeichen in eine Datei (z.B. als Sicherheitskopie)",
+  Frontend_FluentCore_Button_ToggleTheme_Description: "Farbschema auf {0} umschalten",
   //
-  Frontend_FluentCore_Settings_ThemeLuminance_Label: "Helligkeit der Benutzeroberfläche",
-  Frontend_FluentCore_Settings_ThemeLuminance_Description: "Ändert die Helligkeit des Motivs für die Benutzeroberfläche",
+  Frontend_FluentCore_Settings_ThemeMode_Label: "Farbschema",
+  Frontend_FluentCore_Settings_ThemeMode_Description: "Wählen Sie das Farbschema für die Benutzeroberfläche",
+  Frontend_FluentCore_Settings_ThemeMode_WebDark: "Dunkel (Web)",
+  Frontend_FluentCore_Settings_ThemeMode_WebLight: "Hell (Web)",
   Frontend_FluentCore_Settings_ShowBookmarksPanel_Label: "Lesezeichen Ein-/Ausblenden",
   Frontend_FluentCore_Settings_ShowBookmarksPanel_Description: "Schaltet die Sichtbarkeit der Liste mit den Lesezeichen ein/aus",
   Frontend_FluentCore_Settings_ShowDownloadsPanel_Label: "Downloads Ein-/Ausblenden",
@@ -200,6 +202,7 @@ const translations: VariantResource = { // NOTE: Use defaults for missing transl
   FetchProvider_FetchWindow_CloudFlareError: "Die Anfrage wurde aufgrund des folgenden Fehlers beim CloudFlare Server zurückgewiesen: \"{0}\"",
   FetchProvider_FetchWindow_AlertCaptcha: "Bitte lösen Sie das Captcha und warten Sie dann auf die Anwendung (schließen Sie die Website nicht nach dem Lösen des Captcha)!",
   FetchProvider_Fetch_CloudFlareChallenge: "Die Anfrage an \"{0}\" wurde von der CloudFlare Anti-Bot Erkennung zurückgewiesen.\nStelle sicher, dass CloudFlare freigeschaltet wird bevor auf den Inhalt dieser Website zugegriffen wird (z.B. mit der HakuNeko Assistant Browser Erweiterung).",
+  FetchProvider_Fetch_VercelChallenge: "Die Anfrage an \"{0}\" wurde vom Vercel Attack Challenge Mode blockiert.\nBevor auf den Inhalt der Webseite zugegriffen werden kann, muss der Vercel Schutz umgangen werden.",
   FetchProvider_Fetch_Forbidden: "Der Zugriff auf \"{0}\" wurde verweigert.\nStelle sicher, dass die Website erreichbar und der Zugriff berechtigt ist (z.B. VPN um Regionalsperre zu umgehen, manuelle Anmeldung per Webseitenlink).",
   //
   BookmarkPlugin_ConvertToSerializedBookmark_UnsupportedFormatError: "Die Daten scheinen fehlerhaft zu sein, es konnte kein Lesezeichen extrahiert werden!",
@@ -224,6 +227,8 @@ const translations: VariantResource = { // NOTE: Use defaults for missing transl
   Tags_Source_Scanlator: 'Scanlator',
   Tags_Source_Aggregator: "Raubkopierer",
   Tags_Accessibility: "Verfügbarkeit",
+  Tags_Accessibility_DomainRotation: "Regelmässiger Domain Wechsel",
+  Tags_Accessibility_DomainRotationDescription: "Regelmässige Änderung des (Sub-)Domain Namens, möglicherweise zur Vermeidung von DMCA Anfragen",
   Tags_Accessibility_RegionLock: "Regional Eingeschränkt",
   Tags_Accessibility_RegionLockDescription: "Zugriff nur für freigeschaltete Länder (Geo-IP)",
   Tags_Accessibility_RateLimit: "Abfrage Begrenzung",
@@ -285,6 +290,7 @@ const translations: VariantResource = { // NOTE: Use defaults for missing transl
   // [SECTION]: Plugins (specific)
   Plugin_CopyManga_Settings_GlobalCDN: "Globalen Server verwenden",
   Plugin_CopyManga_Settings_GlobalCDNInfo: "Für die Anfragen wird der globale Server anstelle des regionalen Servers verwendet",
+  Plugin_CuuTruyen_Error_NotProcessed: "Das Kapitel wird momentan verarbeitet und steht zum aktuellen Zeitpunkt noch nicht zur Verfügung.",
   Plugin_PocketComics_LanguageMismatchError: "Für die Sprache {1} wurden der Titel {0} nicht gefunden",
   Plugin_SheepScanlations_Settings_Username: "Benutzername",
   Plugin_SheepScanlations_Settings_UsernameInfo: "Benutzername für die automatische Anmeldung bei der Webseite",

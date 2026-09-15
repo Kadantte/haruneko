@@ -1,13 +1,12 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture ({
     plugin: {
         id: 'yuriverso',
-        title: 'Yuri Verso'
+        title: 'Yuri On Air'
     },
     container: {
-        url: 'https://yuri.live/manga/life-is-strange-dust/',
+        url: 'https://yurionair.top/manga/life-is-strange-dust/',
         id: JSON.stringify({ post: '3032', slug: '/manga/life-is-strange-dust/' }),
         title: 'Life is Strange -Dust-'
     },
@@ -20,7 +19,4 @@ const config = {
         size: 838_042,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

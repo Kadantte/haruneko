@@ -1,5 +1,4 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
     plugin: {
@@ -7,7 +6,7 @@ const config = {
         title: 'Zhuzhumh'
     },
     container: {
-        url: 'https://www.zhuzhumh.com/book/shisiruguiweijunzi.html',
+        url: 'https://cn.zhuzhumh.com/book/shisiruguiweijunzi.html',
         id: '/book/shisiruguiweijunzi.html',
         title: '视死如归魏君子'
     },
@@ -22,5 +21,4 @@ const config = {
     }
 };
 
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+new TestFixture(config).AssertWebsite();

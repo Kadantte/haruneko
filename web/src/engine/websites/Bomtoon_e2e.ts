@@ -1,10 +1,11 @@
-import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+// CASE: Plain Images
+new TestFixture({
     plugin: {
         id: 'bomtoon',
-        title: 'Bomtoon'
+        title: 'Bomtoon',
+        timeout: 20000
     },
     container: {
         url: 'https://www.bomtoon.com/detail/not_friend_all',
@@ -20,7 +21,27 @@ const config = {
         size: 66_636,
         type: 'image/jpeg'
     }
-};
+}).AssertWebsite();
 
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+// CASE: Scrambled Images
+new TestFixture({
+    plugin: {
+        id: 'bomtoon',
+        title: 'Bomtoon',
+        timeout: 20000
+    },
+    container: {
+        url: 'https://www.bomtoon.com/detail/spinach_fl',
+        id: 'spinach_fl',
+        title: '시금치 꽃다발'
+    },
+    child: {
+        id: 'p0',
+        title: '미리보기'
+    },
+    entry: {
+        index: 0,
+        size: 2_059_010,
+        type: 'image/png'
+    }
+}).AssertWebsite();

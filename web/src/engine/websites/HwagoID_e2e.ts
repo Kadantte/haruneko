@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'hwagoid',
-        title: 'HwagoID'
+        title: 'Hwago'
     },
     container: {
-        url: 'https://hwago.id/komik/dreaming-freedom/',
-        id: JSON.stringify({post: '1993', slug: '/komik/dreaming-freedom/' }),
+        url: 'https://02.hwago.xyz/comic/dreaming-freedom',
+        id: '/comic/dreaming-freedom',
         title: 'Dreaming Freedom'
     },
     child: {
-        id: '/komik/dreaming-freedom/chapter-126/',
+        id: '/read/dreaming-freedom/chapter-126',
         title: 'Chapter 126'
     },
     entry: {
-        index: 0,
-        size: 690_350,
+        index: 1,
+        size: 399_468,
         type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

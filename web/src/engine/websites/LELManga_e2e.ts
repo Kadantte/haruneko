@@ -1,7 +1,6 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'lelmanga',
         title: 'LELManga'
@@ -17,10 +16,7 @@ const config: Config = {
     },
     entry: {
         index: 0,
-        size: 614_256,
+        size: 577_995,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

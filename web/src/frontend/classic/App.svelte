@@ -3,7 +3,6 @@
     import 'carbon-components-svelte/css/all.css';
     import './theme/hakuneko.css';
     import './theme/global.css';
-    import './theme/sidenav-hack.css';
     import { Content } from 'carbon-components-svelte';
     // Svelte
     import { fade } from 'svelte/transition';
@@ -19,8 +18,9 @@
     import UserMessage from './components/UserMessages.svelte';
     import ContentPage from './components/content-pages/ContentRouter.svelte';
     // UI: Stores
-    import { ContentPanel, Theme as ThemeSetting } from './stores/Settings';
-    import { selectedItem, contentscreen } from './stores/Stores';
+    import { Settings } from './stores/Settings.svelte';
+    import { Store as UI} from './stores/Stores.svelte';
+    import StartupGuide from './components/startupguide/StartupGuide.svelte';
 
     let resolveFinishLoading: () => void;
     export const FinishLoading = Promise.race([
@@ -38,24 +38,28 @@
 </script>
 
 <UserMessage />
+{#if Settings.StartupGuideEnabled.Value}
+    <StartupGuide/>
+{/if}
 
-<Theme theme={$ThemeSetting}>
+<Theme theme={Settings.Theme.Value}>
     <AppBar
-        on:home={() => {
-            $selectedItem = null;
-            $contentscreen = '/';
+        onHome={() => {
+            UI.selectedItem = null;
+            UI.contentscreen = '/';
         }}
     />
+
     <Content
         id="hakunekoapp"
-        class={$ContentPanel ? 'ui-mode-content' : 'ui-mode-download'}
+        class={Settings.ContentPanel.Value ? 'ui-mode-content' : 'ui-mode-download'}
     >
         <MediaSelect />
         <MediaItemSelect />
-        {#if $ContentPanel}
+        {#if Settings.ContentPanel.Value}
             <div id="Content" transition:fade>
-                {#if $selectedItem}
-                    <Viewer item={$selectedItem} />
+                {#if UI.selectedItem}
+                    <Viewer item={UI.selectedItem} />
                 {:else if showHome}
                     <ContentPage />
                 {/if}
@@ -85,6 +89,7 @@
         padding: 0.5em;
         gap: 0.3em 0.3em;
         grid-template-rows: 1fr fit-content(0.5em);
+        margin-left: 3rem!important;
     }
     :global(.ui-mode-content) {
         grid-template-columns: min-content min-content 1fr;
@@ -105,6 +110,7 @@
     }
     #Bottom {
         grid-area: Bottom;
+        margin-bottom:1em;
     }
     :global(#Header) {
         -webkit-app-region: drag;

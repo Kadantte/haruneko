@@ -1,13 +1,12 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'niconicoseiga',
         title: 'ニコニコ静画 (niconico seiga)'
     },
     container: {
-        url: 'https://sp.manga.nicovideo.jp/comic/62094',
+        url: 'https://manga.nicovideo.jp/comic/62094',
         id: '62094',
         title: '寿司ガキ'
     },
@@ -20,7 +19,4 @@ const config = {
         size: 199_413,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

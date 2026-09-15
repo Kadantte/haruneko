@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'mindafansub',
         title: 'Minda Fansub'
     },
     container: {
-        url: 'https://mindafansub.online/manga/painter-of-the-night/',
-        id: JSON.stringify({ post: '1873', slug: '/manga/painter-of-the-night/'}),
+        url: 'https://mindafansub.dev/manga/painter-of-the-night-1/',
+        id: JSON.stringify({ post: '112', slug: '/manga/painter-of-the-night-1/' }),
         title: 'Painter of the Night'
     },
     child: {
-        id: '/manga/painter-of-the-night/bolum-1/',
+        id: '/manga/painter-of-the-night-1/bolum-1/',
         title: 'Bölüm 1'
-    },
+    }, /* Login Needed
     entry: {
         index: 0,
-        size: 483_927,
+        size: 209_831,
         type: 'image/jpeg'
-    }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+    }*/
+}).AssertWebsite();

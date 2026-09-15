@@ -1,4 +1,3 @@
-import { describe } from 'vitest';
 import { TestFixture, type Config } from '../../../test/WebsitesFixture';
 
 const config: Config = {
@@ -7,7 +6,7 @@ const config: Config = {
         title: 'LIAN'
     },
     container: {
-        url: 'https://www.lianscans.my.id/manga/lian-short-yuri-collection/',
+        url: 'https://www.lianscans.com/manga/lian-short-yuri-collection/',
         id: '/manga/lian-short-yuri-collection/',
         title: 'LIAN Short Yuri Collection'
     },
@@ -22,5 +21,4 @@ const config: Config = {
     }
 };
 
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+new TestFixture(config).AssertWebsite();

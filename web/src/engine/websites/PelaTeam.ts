@@ -4,24 +4,17 @@ import { DecoratableMangaScraper } from '../providers/MangaPlugin';
 import * as Common from './decorators/Common';
 
 function MangaAndChapterExtractor(anchor: HTMLAnchorElement) {
-    const id = anchor.pathname +'Computer/' + anchor.search;
-    const title = anchor.text.replace(/\[\d+p\.\]/, '').trim();
-    return { id, title };
+    return {
+        id: anchor.pathname + 'Computer/' + anchor.search,
+        title: anchor.text.replace(/\[\d+p\.\]/, '').trim()
+    };
 }
 
-const pageScript = `
-         new Promise((resolve, reject) => {
-                try {
-                    resolve(imageArray.map(image => new URL(window.location.pathname+image, window.location.origin)));
-                } catch(error) {
-                    reject(error);
-                }
-         });
-`;
+const pageScript = `imageArray.map(image => new URL(window.location.pathname+image, window.location.origin));`;
 
-@Common.MangaCSS(/^{origin}\/Computer\/\?manga=[^#]+$/, 'div.nomeserie a', Common.ElementLabelExtractor(), true)
+@Common.MangaCSS(/^{origin}\/Computer\/\?manga=[^#]+$/, 'div.nomeserie a', Common.WebsiteInfoExtractor({ includeSearch: true }))
 @Common.MangasSinglePageCSS('/Computer/', 'div.theList div.nomeserie > a', MangaAndChapterExtractor)
-@Common.ChaptersSinglePageCSS('div.theList a[title = "Capitolo Italiano"]', MangaAndChapterExtractor)
+@Common.ChaptersSinglePageCSS('div.theList a[title = "Capitolo Italiano"]', undefined, MangaAndChapterExtractor)
 @Common.PagesSinglePageJS(pageScript)
 @Common.ImageAjax()
 export default class extends DecoratableMangaScraper {

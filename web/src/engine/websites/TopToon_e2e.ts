@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'toptoon',
         title: 'TOPTOON (탑툰)'
@@ -16,11 +15,8 @@ const config = {
         title: '시즌1 제1화 - 엄마와 딸'
     },
     entry: {
-        index: 0,
-        size: 164_346,
+        index: 1,
+        size: 280_933,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

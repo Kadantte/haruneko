@@ -1,18 +1,17 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'bacakomik',
         title: 'BacaKomik'
     },
     container: {
-        url: 'https://bacakomik.me/komik/tokyo-revengers/',
-        id: '/komik/tokyo-revengers/',
+        url: 'https://bacakomik.my/komik/tokyo卍revengers/',
+        id: encodeURI('/komik/tokyo卍revengers/'),
         title: 'Tokyo卍Revengers'
     },
     child: {
-        id: encodeURI('/chapter/tokyo卍revengers-chapter-1-bahasa-indonesia').toLocaleLowerCase(),
+        id: encodeURI('/tokyo卍revengers-chapter-1/').toLowerCase(),
         title: 'Chapter 1'
     },
     entry: {
@@ -20,7 +19,4 @@ const config: Config = {
         size: 243_154,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

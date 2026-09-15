@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'golgebahcesi',
         title: 'Gölge Bahçesi'
-    }, /*Region Locked : Turkish
+    },
     container: {
-        url: 'https://golgebahcesi.com/manga/ozel-memur/',
-        id: '/manga/ozel-memur/',
+        url: 'https://golgebahcesi.com/manga/ozel-memur',
+        id: 'ozel-memur',
         title: 'Özel Memur'
     },
     child: {
-        id: '/ozel-memur-bolum-4/',
+        id: '6a21d8d7924f34d61607cc76',
         title: 'Bölüm 4'
     },
     entry: {
         index: 0,
-        size: 485_139,
-        type: 'image/jpeg'
-    }*/
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+        size: 95_954,
+        type: 'image/webp'
+    }
+}).AssertWebsite();

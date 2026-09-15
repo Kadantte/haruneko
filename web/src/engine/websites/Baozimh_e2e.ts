@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'baozimh',
         title: '包子漫書 (baozimh)'
@@ -13,14 +12,11 @@ const config = {
     },
     child: {
         id: '/user/page_direct?comic_id=wotianmingdafanpai-tianmingfanpaiyuanzhuhuizhudongman&section_slot=0&chapter_slot=53',
-        title: '第53話 坦誠？'
+        title: '第54話 就緒！'
     },
     entry: {
-        index: 53,
-        size: 113_017,
+        index: 5,
+        size: 142_678,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

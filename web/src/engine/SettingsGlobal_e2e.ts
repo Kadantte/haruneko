@@ -1,13 +1,14 @@
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import type { JSHandle } from 'puppeteer-core';
 import { PuppeteerFixture } from '../../../test/PuppeteerFixture';
 import type { ISettings } from './SettingsManager';
 import { Key } from './SettingsGlobal';
+vi.mock('./BackgroundTimers', () => ({}));
 
 export class TestFixture extends PuppeteerFixture {
 
     public async GetRemoteGlobalSettings(): Promise<JSHandle<ISettings>> {
-        return super.Page.evaluateHandle(async () => {
+        return this.EvaluateHandle(async () => {
             return window.HakuNeko.SettingsManager.OpenScope();
         });
     }
@@ -17,7 +18,7 @@ describe('SettingsGlobal', () => {
 
     it('Should be initialized and accessible', async () => {
 
-        const fixture = await new TestFixture().Connect();
+        const fixture = new TestFixture();
         const remoteTestee = await fixture.GetRemoteGlobalSettings();
 
         expect(await remoteTestee.evaluate(testee => testee.Get('language').ID)).toBe(Key.Language);

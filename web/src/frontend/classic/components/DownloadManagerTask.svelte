@@ -1,24 +1,35 @@
 <script lang="ts">
     // TODO: text-overflow not working
     import { Button, ProgressBar } from 'carbon-components-svelte';
-    import { TrashCan, WarningHexFilled } from 'carbon-icons-svelte';
+    import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte';
+    import WarningHexFilled from 'carbon-icons-svelte/lib/WarningHexFilled.svelte';
 
-    import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-    const dispatch = createEventDispatcher();
+    import { onMount, onDestroy } from 'svelte';
 
     import type { DownloadTask } from '../../../engine/DownloadTask';
     import { Status } from '../../../engine/DownloadTask';
 
-    export let job: DownloadTask;
-    export let taskerror: DownloadTask = undefined;
+    interface Props {
+        job: DownloadTask;
+        taskerror: DownloadTask;
+        onUpdate: () => void;
+    };
+    let { job, taskerror = $bindable(), onUpdate }: Props  = $props();
 
-    async function OnJobChangedCallback(_progress: number, changedJob: DownloadTask) {
+
+    async function OnJobChangedCallback(
+        _progress: number,
+        changedJob: DownloadTask,
+    ) {
         job = changedJob;
     }
 
-    async function OnJobStatusChangedCallback(_status: Status, changedJob: DownloadTask) {
+    async function OnJobStatusChangedCallback(
+        _status: Status,
+        changedJob: DownloadTask,
+    ) {
         OnJobChangedCallback(changedJob.Progress.Value, changedJob);
-        dispatch('update');
+        onUpdate();
     }
 
     onMount(() => {
@@ -45,23 +56,27 @@
         <ProgressBar
             status={StatusIcons[job.Status.Value]}
             size="sm"
-            value={job.Status.Value === Status.Processing ? 100 : job.Progress.Value * 100}
+            value={job.Status.Value === Status.Processing
+                ? 100
+                : job.Progress.Value * 100}
         >
-            <div slot="labelText" class="label">
-                {job.Media.Title}
-                {#if job.Errors.length > 0}
-                    <Button
-                        kind="danger-ghost"
-                        size="small"
-                        icon={WarningHexFilled}
-                        iconDescription={job.Errors[0].name}
-                        on:click={(e) => {
-                            taskerror = job;
-                            e.stopPropagation();
-                        }}
-                    />
-                {/if}
-            </div>
+            {#snippet labelChildren()}
+                <div class="label">
+                    {job.Media.Title}
+                    {#if job.Errors.Value.length > 0}
+                        <Button
+                            kind="danger-ghost"
+                            size="small"
+                            icon={WarningHexFilled}
+                            iconDescription={job.Errors.Value[0]?.message || 'error message missing'}
+                            on:click={(e) => {
+                                taskerror = job;
+                                e.stopPropagation();
+                            }}
+                        />
+                    {/if}
+                </div>
+            {/snippet}
         </ProgressBar>
     </div>
     <div class="action">
@@ -70,7 +85,10 @@
             size="small"
             icon={TrashCan}
             iconDescription="Delete"
-            on:click={() => window.HakuNeko.DownloadManager.Dequeue(job)}
+            on:click={(e) => {
+                window.HakuNeko.DownloadManager.Dequeue(job);
+                e.stopPropagation();
+            }}
         />
     </div>
 </div>

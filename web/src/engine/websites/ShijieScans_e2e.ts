@@ -1,14 +1,13 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'shijiescans',
         title: 'Shijie Scans'
     },
     container: {
-        url: 'https://shijiescans.com/manga/gel-beni-al/',
-        id: '/manga/gel-beni-al/',
+        url: 'https://shijiescans.com/seri/gel-beni-al/',
+        id: '/seri/gel-beni-al/',
         title: 'Gel Beni Al!'
     },
     child: {
@@ -20,7 +19,4 @@ const config = {
         size: 426_608,
         type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

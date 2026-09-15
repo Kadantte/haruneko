@@ -1,15 +1,13 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'ruyamanga',
         title: 'Rüya Manga'
     },
-    /* CloudFlare
     container: {
-        url: 'https://www.ruyamanga.com/manga/deli-muhendis/',
-        id: JSON.stringify({ post: '124522', slug: '/manga/deli-muhendis/' }),
+        url: 'https://www.ruyamanga2.com/manga/deli-muhendis/',
+        id: JSON.stringify({ post: '56', slug: '/manga/deli-muhendis/' }),
         title: 'Deli Mühendis'
     },
     child: {
@@ -18,11 +16,7 @@ const config = {
     },
     entry: {
         index: 0,
-        size: 51_272,
+        size: 54_332,
         type: 'image/webp'
     }
-    */
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

@@ -1,13 +1,12 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'opiatoon',
         title: 'Opiatoon (Opia&Shipperland)'
     },
     container: {
-        url: 'https://opiatoon.biz/manga/lit-a-light/',
+        url: 'https://opiatoon.shop/manga/lit-a-light/',
         id: JSON.stringify({ post: '20752', slug: '/manga/lit-a-light/' }),
         title: 'Lit a Light'
     },
@@ -20,7 +19,4 @@ const config = {
         size: 600_410,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

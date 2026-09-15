@@ -1,26 +1,22 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'ngomik',
         title: 'Ngomik'
     },
     container: {
-        url: 'https://ngomik.mom/manga/reborn-as-the-heavenly-demon/',
+        url: 'https://02.ngomik.cc/manga/reborn-as-the-heavenly-demon/',
         id: '/manga/reborn-as-the-heavenly-demon/',
         title: 'Reborn as The Heavenly Demon'
     },
     child: {
-        id: '/reborn-as-the-heavenly-demon-chapter-01/',
-        title: 'Chapter 01'
+        id: '/reborn-as-the-heavenly-demon-chapter-1/',
+        title: 'Chapter 1'
     },
     entry: {
         index: 1,
-        size: 168_025,
+        size: 359_729,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'kiryuu',
         title: 'Kiryuu'
     },
     container: {
-        url: 'https://kiryuu.id/manga/the-modern-eras-strongest-soldier-conquers-another-worlds-dungeon/',
+        url: 'https://v7.kiryuu.to/manga/the-modern-eras-strongest-soldier-conquers-another-worlds-dungeon/',
         id: '/manga/the-modern-eras-strongest-soldier-conquers-another-worlds-dungeon/',
-        title: 'The Modern Era’s Strongest Soldier Conquers Another World’s Dungeon'
+        title: `The Modern Era's Strongest Soldier Conquers Another World's Dungeon`
     },
     child: {
-        id: '/the-modern-eras-strongest-soldier-conquers-another-worlds-dungeon-chapter-01/',
-        title: 'Chapter 01 Fix'
+        id: '/manga/the-modern-eras-strongest-soldier-conquers-another-worlds-dungeon/chapter-1.433123/',
+        title: 'Chapter 1'
     },
     entry: {
         index: 0,
         size: 705_846,
         type: 'image/png'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

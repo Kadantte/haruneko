@@ -1,18 +1,13 @@
 import { Tags } from '../Tags';
 import icon from './MagusManga.webp';
-import { DecoratableMangaScraper } from '../providers/MangaPlugin';
-import * as MangaStream from './decorators/WordPressMangaStream';
+import { VTheme } from './templates/VTheme';
 import * as Common from './decorators/Common';
 
-@MangaStream.MangaCSS(/^{origin}\/series\/[^/]+\/$/)
-@MangaStream.MangasSinglePageCSS(undefined, '/series/list-mode/')
-@MangaStream.ChaptersSinglePageCSS()
-@MangaStream.PagesSinglePageJS()
-@Common.ImageAjax()
-export default class extends DecoratableMangaScraper {
+@Common.PagesSinglePageCSS('section[itemprop="articleBody"] figure img:not([itemprop])')
+export default class extends VTheme {
 
     public constructor() {
-        super('magusmanga', 'MagusManga', 'https://neroscans.com', Tags.Media.Manhwa, Tags.Media.Manhua, Tags.Media.Manga, Tags.Language.English, Tags.Source.Aggregator);
+        super('magusmanga', 'MagusManga', 'https://magustoon.org', Tags.Media.Manhwa, Tags.Media.Manhua, Tags.Media.Manga, Tags.Language.English, Tags.Source.Aggregator);
     }
 
     public override get Icon() {

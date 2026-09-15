@@ -6,7 +6,10 @@
         Modal,
         ProgressBar,
     } from 'carbon-components-svelte';
-    import { CloudDownload, TrashCan } from 'carbon-icons-svelte';
+    import Clean from 'carbon-icons-svelte/lib/Clean.svelte';
+    import CloudDownload from 'carbon-icons-svelte/lib/CloudDownload.svelte';
+    import RetryFailed from 'carbon-icons-svelte/lib/RetryFailed.svelte';
+    import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte';
     import { DownloadTask, Status } from '../../../engine/DownloadTask';
     import DownloadManager from './DownloadManager.svelte';
 
@@ -60,7 +63,7 @@
         refreshCounts();
     });
 
-    function refreshStatus() {
+    async function refreshStatus() {
         const nowDownloading = downloadTasks.filter((job) =>
             [Status.Downloading, Status.Processing].includes(job.Status.Value),
         )[0];
@@ -88,6 +91,21 @@
         [Status.Completed]: 'finished',
         [Status.Failed]: 'error',
     };
+
+    async function clearTasks() {
+        await window.HakuNeko.DownloadManager.Dequeue(...downloadTasks);
+        refreshStatus();
+    }
+
+    async function deleteTasks(status: Status) {
+        await window.HakuNeko.DownloadManager.Dequeue(...downloadTasks.filter(task => task.Status.Value === status));
+        refreshStatus();
+    }
+
+    function retryTasks(status: Status) {
+        return Promise.all(downloadTasks.filter(task => task.Status.Value === status).map(task => task.Run()));
+    }
+
 </script>
 
 {#if isModalOpen}
@@ -96,14 +114,24 @@
         <div slot="heading">
             Download Tasks
             <Button
+                kind="secondary"
+                size="small"
+                icon={Clean}
+                iconDescription="Clear finished tasks"
+                on:click={() => deleteTasks(Status.Completed)}
+            />
+            <Button
+                size="small"
+                icon={RetryFailed}
+                iconDescription="Retry failed tasks"
+                on:click={() => retryTasks(Status.Failed)}
+            />
+            <Button
                 kind="danger-tertiary"
                 size="small"
                 icon={TrashCan}
                 iconDescription="Delete all tasks"
-                on:click={() =>
-                    downloadTasks.forEach((task) =>
-                        window.HakuNeko.DownloadManager.Dequeue(task),
-                    )}
+                on:click={() => clearTasks()}
             />
         </div>
     </Modal>
@@ -111,7 +139,7 @@
 <ClickableTile on:click={() => (isModalOpen = true)}>
     <div id="tasksstatus">
         <div class="label">
-            <CloudDownload size={32} />
+            <CloudDownload size={32}></CloudDownload>
             <div class="count">
                 Downloads ({downloadTasks.filter((job) =>
                     [
@@ -131,13 +159,10 @@
                             status={statusmap[status]}
                             labelText="[{currentDownload.Media.Parent
                                 .Title}] {currentDownload.Media.Title}"
-                        />
+                        ></ProgressBar>
                     {:else}
-                        <ProgressBar
-                            size="sm"
-                            value={0}
-                            labelText="<no tasks>"
-                        />
+                        <ProgressBar size="sm" value={0} labelText="<no tasks>"
+                        ></ProgressBar>
                     {/if}
                 </div>
                 <div class="total">
@@ -145,17 +170,17 @@
                         class="bar val-processing"
                         style:flex-basis="{(processing / downloadTasks.length) *
                             100}%"
-                    />
+                    ></div>
                     <div
                         class="bar val-completed"
                         style:flex-basis="{(completed / downloadTasks.length) *
                             100}%"
-                    />
+                    ></div>
                     <div
                         class="bar val-failed"
                         style:flex-basis="{(failed / downloadTasks.length) *
                             100}%"
-                    />
+                    ></div>
                     <div
                         class="bar val-pending"
                         style:flex-basis="{((downloadTasks.length -
@@ -164,7 +189,7 @@
                             processing) /
                             downloadTasks.length) *
                             100}%"
-                    />
+                    ></div>
                 </div>
             {/if}
         </div>

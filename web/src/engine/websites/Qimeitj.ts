@@ -6,13 +6,13 @@ import * as MH from './templates/MH';
 import { FetchCSS } from '../platform/FetchProvider';
 
 @Common.MangaCSS(/^{origin}\/book\/[^/]+$/, MH.queryMangaTitleFromURI)
-@Common.MangasMultiPageCSS(MH.mangaPath, MH.queryMangas)
-@Common.ChaptersSinglePageCSS(MH.queryChapters, MH.ChapterExtractor)
+@Common.MangasMultiPageCSS(MH.queryMangas, MH.MangasLinkGenerator)
+@Common.ChaptersSinglePageCSS(MH.queryChapters, undefined, MH.ChapterExtractor)
 @Common.ImageAjax()
 export default class extends DecoratableMangaScraper {
 
     public constructor() {
-        super('qimeitj', `Qimeitj`, 'https://qimeitj.com', Tags.Language.Chinese, Tags.Media.Manhua, Tags.Media.Manhwa, Tags.Source.Aggregator);
+        super('qimeitj', `Qimeitj`, 'https://hxy4.com', Tags.Language.Chinese, Tags.Media.Manhua, Tags.Media.Manhwa, Tags.Source.Aggregator);
     }
 
     public override get Icon() {

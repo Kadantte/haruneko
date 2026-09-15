@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture( {
     plugin: {
         id: 'xlecx',
         title: 'XlecX'
@@ -9,7 +8,7 @@ const config = {
     container: {
         url: 'https://xlecx.one/32731-mayuyuus-laws.html',
         id: '/32731-mayuyuus-laws.html',
-        title: 'Mayuyuu\'s Laws'
+        title: `Mayuyuu's Laws`
     },
     child: {
         id: '/32731-mayuyuus-laws.html',
@@ -20,7 +19,4 @@ const config = {
         size: 332_707,
         type: 'image/png'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

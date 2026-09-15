@@ -1,13 +1,12 @@
-import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'inmortalscan',
         title: 'Inmortal Scan'
     },
     container: {
-        url: 'https://manga.mundodrama.site/mg/memoir-of-the-king-of-war/',
+        url: 'https://scan-inmortal.com/mg/memoir-of-the-king-of-war/',
         id: JSON.stringify({ post: '1864', slug: '/mg/memoir-of-the-king-of-war/' }),
         title: 'Memorias del Rey de la Guerra'
     },
@@ -20,7 +19,4 @@ const config = {
         size: 359_607,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

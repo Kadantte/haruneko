@@ -1,13 +1,12 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'komikindoid',
         title: 'KomikIndoId'
     },
     container: {
-        url: 'https://komikindo.tv/komik/50kg-cinderella/',
+        url: 'https://komikindo.ch/komik/50kg-cinderella/',
         id: '/komik/50kg-cinderella/',
         title: '-50kg Cinderella'
     },
@@ -20,7 +19,4 @@ const config: Config = {
         size: 57_750,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

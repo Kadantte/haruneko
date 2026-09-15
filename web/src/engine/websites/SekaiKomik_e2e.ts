@@ -1,27 +1,22 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'sekaikomik',
-        title: 'SekaiKomik'
+        title: 'ManhwaLand (SekaiKomik)',
     },
     container: {
-        url: 'https://sekaikomik.guru/manga/circles/',
-        id: '/manga/circles/',
+        url: 'https://05c.manhwaland.land/manga/circles',
+        id: 'circles',
         title: 'Circles'
     },
     child: {
-        id: '/circles-chapter-01/',
-        title: 'Chapter 01',
-        timeout: 15000
+        id: '1',
+        title: 'Ch. 1',
     },
     entry: {
-        index: 0,
-        size: 106_232,
-        type: 'image/jpeg'
+        index: 1,
+        size: 115_840,
+        type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

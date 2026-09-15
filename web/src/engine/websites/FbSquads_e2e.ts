@@ -1,5 +1,4 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
 const config = {
     plugin: {
@@ -7,7 +6,7 @@ const config = {
         title: 'Fleur Blanche Squads'
     },
     container: {
-        url: 'https://fbsscan.com/manga/polar-attraction/',
+        url: 'https://fbsquadx.com/manga/polar-attraction/',
         id: JSON.stringify({ slug: '/manga/polar-attraction/' }),
         title: 'Polar Attraction',
     },
@@ -17,10 +16,9 @@ const config = {
     },
     entry: {
         index: 2,
-        size: 353_179,
+        size: 417_842,
         type: 'image/jpeg'
     }
 };
 
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+new TestFixture(config).AssertWebsite();

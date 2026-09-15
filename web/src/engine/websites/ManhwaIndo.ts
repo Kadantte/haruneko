@@ -7,12 +7,12 @@ import * as Common from './decorators/Common';
 @MangaStream.MangaCSS(/^{origin}\/series\/[^/]+\/$/)
 @MangaStream.MangasSinglePageCSS(undefined, '/series/list-mode/')
 @MangaStream.ChaptersSinglePageCSS()
-@MangaStream.PagesSinglePageCSS()
+@Common.PagesSinglePageJS('ts_reader.params.sources[0].images;', 500)
 @Common.ImageAjax()
 export default class extends DecoratableMangaScraper {
 
     public constructor() {
-        super('manhwaindo', 'ManhwaIndo', 'https://manhwaindo.net', Tags.Media.Manhwa, Tags.Media.Manhua, Tags.Language.Indonesian);
+        super('manhwaindo', 'ManhwaIndo', 'https://www.manhwaindo.my', Tags.Media.Manhwa, Tags.Media.Manhua, Tags.Language.Indonesian, Tags.Source.Aggregator);
     }
 
     public override get Icon() {

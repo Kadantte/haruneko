@@ -1,52 +1,34 @@
 import { Tags } from '../Tags';
 import icon from './Pururin.webp';
-import { Chapter, DecoratableMangaScraper, Page, type Manga } from '../providers/MangaPlugin';
+import { DecoratableMangaScraper } from '../providers/MangaPlugin';
 import * as Common from './decorators/Common';
-import {FetchCSS } from '../platform/FetchProvider';
 
-type JsonImg = {
-    directory: string,
-        images: {
-            page: number,
-            filename: string
-        }[]
-}
-
-function MangaInfoExTractor(anchor: HTMLAnchorElement) {
-    const id = anchor.pathname;
-    const title = anchor.querySelector('img.card-img-top').getAttribute('alt').trim();
-    return { id, title };
-}
+const pageScript = `
+    new Promise (resolve => {
+        const element = document.querySelector('.img-viewer');
+        const imgdata = JSON.parse(element.dataset['img']);
+        resolve( imgdata.images.map( image => new URL( [imgdata.directory, image.filename].join('/'), element.dataset.svr).href));
+    })
+`;
 
 @Common.MangaCSS(/^{origin}\/gallery\/\d+\//, 'div.title h1 span')
-@Common.MangasMultiPageCSS('/browse/title?page={page}', 'a.card.card-gallery', 1, 1, 0, MangaInfoExTractor)
+@Common.MangasMultiPageCSS<HTMLAnchorElement>('a.card.card-gallery', Common.PatternLinkGenerator('/?page={page}'), 0, anchor => ({
+    id: anchor.pathname,
+    title: anchor.querySelector<HTMLImageElement>('img.card-img-top').getAttribute('alt').trim()
+}))
+@Common.ChaptersSinglePageCSS('div.gallery-wrapper', undefined, element => ({
+    id: element.querySelector<HTMLAnchorElement>('div.cover-wrapper a').pathname,
+    title: element.querySelector<HTMLSpanElement>('div.title h1 span').textContent.trim()
+}))
+@Common.PagesSinglePageJS(pageScript, 1500)
 @Common.ImageAjax()
 export default class extends DecoratableMangaScraper {
 
     public constructor() {
-        super('pururin', `Pururin`, 'https://pururin.to', Tags.Language.English, Tags.Media.Manga, Tags.Source.Aggregator, Tags.Rating.Erotica);
+        super('pururin', `Pururin`, 'https://pururin.me', Tags.Language.English, Tags.Media.Manga, Tags.Source.Aggregator, Tags.Rating.Pornographic);
     }
 
     public override get Icon() {
         return icon;
     }
-
-    public override async FetchChapters(manga: Manga): Promise<Chapter[]> {
-        const uri = new URL(manga.Identifier, this.URI);
-        const request = new Request(uri.href);
-        const data = await FetchCSS<HTMLAnchorElement>(request, 'div.gallery-action a:first-of-type'); //button "Read Online"
-        return [new Chapter(this, manga, data[0].pathname, 'Chapter')];
-    }
-
-    public override async FetchPages(chapter: Chapter): Promise<Page[]> {
-        const uri = new URL(chapter.Identifier, this.URI);
-        const request = new Request(uri.href);
-        const data = await FetchCSS(request, '.img-viewer');
-        const imgdata: JsonImg = JSON.parse(data[0].dataset['img']);
-        const server = data[0].dataset['svr'];
-        const directory = imgdata.directory;
-        return imgdata.images.map(page => new Page(this, chapter, new URL(`${directory}/${page.filename}`, server)));
-
-    }
-
 }

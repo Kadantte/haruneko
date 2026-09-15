@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'mangabox',
         title: 'Mangabox'
@@ -12,15 +11,12 @@ const config = {
         title: 'オンライン The Comic'
     },
     child: {
-        id: '/reader/220/episodes/133391/',
-        title: '第206話'
+        id: JSON.stringify({ episodeId: 5380, mask: 57 }),
+        title: '1'
     },
     entry: {
         index: 0,
-        size: 216_414,
-        type: 'image/jpeg'
+        size: 344_796,
+        type: 'image/png'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

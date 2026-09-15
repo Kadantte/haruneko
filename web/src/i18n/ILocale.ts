@@ -67,6 +67,8 @@ export enum TagResourceKey {
     Tags_Source_Official = 'Tags_Source_Official',
     Tags_Source_Scanlator = 'Tags_Source_Scanlator',
     Tags_Source_Aggregator = 'Tags_Source_Aggregator',
+    Tags_Accessibility_DomainRotation = 'Tags_Accessibility_DomainRotation',
+    Tags_Accessibility_DomainRotationDescription = 'Tags_Accessibility_DomainRotationDescription',
     Tags_Accessibility_RegionLock = 'Tags_Accessibility_RegionLock',
     Tags_Accessibility_RegionLockDescription = 'Tags_Accessibility_RegionLockDescription',
     Tags_Accessibility_RateLimit = 'Tags_Accessibility_RateLimit',
@@ -115,6 +117,9 @@ export enum FrontendResourceKey {
     FrontendController_Reload_ConfirmNotice = 'FrontendController_Reload_ConfirmNotice',
     Frontend_Product_Title = 'Frontend_Product_Title',
     Frontend_Product_Description = 'Frontend_Product_Description',
+    Frontend_Product_Description_Short = 'Frontend_Product_Description_Short',
+    Frontend_Product_Description_Long1 = 'Frontend_Product_Description_Long1',
+    Frontend_Product_Description_Long2 = 'Frontend_Product_Description_Long2',
     Frontend_Setting = 'Frontend_Setting',
     Frontend_Settings = 'Frontend_Settings',
     Frontend_Help = 'Frontend_Help',
@@ -165,11 +170,40 @@ export enum FrontendResourceKey {
     Frontend_Classic_Settings_ViewerReverseDirectionInfo = 'Frontend_Classic_Settings_ViewerReverseDirectionInfo',
     Frontend_Classic_Settings_ViewerDoublePage = 'Frontend_Classic_Settings_ViewerDoublePage',
     Frontend_Classic_Settings_ViewerDoublePageInfo = 'Frontend_Classic_Settings_ViewerDoublePageInfo',
+    Frontend_Classic_Settings_ViewerPadding = 'Frontend_Classic_Settings_ViewerPadding',
+    Frontend_Classic_Settings_ViewerPaddingInfo = 'Frontend_Classic_Settings_ViewerPaddingInfo',
+    Frontend_Classic_Settings_ViewerPreloadNextItem = 'Frontend_Classic_Settings_ViewerPreloadNextItem',
+    Frontend_Classic_Settings_ViewerPreloadNextItemInfo = 'Frontend_Classic_Settings_ViewerPreloadNextItemInfo',
+    Frontend_Classic_Settings_ViewerZoom = 'Frontend_Classic_Settings_ViewerZoom',
+    Frontend_Classic_Settings_ViewerZoomInfo = 'Frontend_Classic_Settings_ViewerZoomInfo',
     Frontend_Classic_Sidenav_Home = 'Frontend_Classic_Sidenav_Home',
     Frontend_Classic_Sidenav_Settings_General = 'Frontend_Classic_Sidenav_Settings_General',
     Frontend_Classic_Sidenav_Settings_Interface = 'Frontend_Classic_Sidenav_Settings_Interface',
     Frontend_Classic_Sidenav_Settings_Trackers = 'Frontend_Classic_Sidenav_Settings_Trackers',
-    Frontend_Classic_Sidenav_Settings_Network = 'Frontend_Classic_Sidenav_Settings_Network',
+    Frontend_Classic_Settings_StartupGuideEnabled = 'Frontend_Classic_Settings_StartupGuideEnabled',
+    Frontend_Classic_Settings_StartupGuideEnabledInfo = 'Frontend_Classic_Settings_StartupGuideEnabledInfo',
+    Frontend_Classic_StartupGuide_Button_Close = 'Frontend_Classic_StartupGuide_Button_Close',
+    Frontend_Classic_StartupGuide_Button_Next = 'Frontend_Classic_StartupGuide_Button_Next',
+    Frontend_Classic_StartupGuide_Button_Restart = 'Frontend_Classic_StartupGuide_Button_Restart',
+    Frontend_Classic_StartupGuide_Step_Welcome = 'Frontend_Classic_StartupGuide_Step_Welcome',
+    Frontend_Classic_StartupGuide_Step_Download = 'Frontend_Classic_StartupGuide_Step_Download',
+    Frontend_Classic_StartupGuide_Step_UI = 'Frontend_Classic_StartupGuide_Step_UI',
+    Frontend_Classic_StartupGuide_Step_Viewer = 'Frontend_Classic_StartupGuide_Step_Viewer',
+    Frontend_Classic_StartupGuide_Step_Tutorial = 'Frontend_Classic_StartupGuide_Step_Tutorial',
+    Frontend_Classic_StartupGuide_Download_Title = 'Frontend_Classic_StartupGuide_Download_Title',
+    Frontend_Classic_StartupGuide_Download_Description = 'Frontend_Classic_StartupGuide_Download_Description',
+    Frontend_Classic_StartupGuide_Tutorial_Title = 'Frontend_Classic_StartupGuide_Tutorial_Title',
+    Frontend_Classic_StartupGuide_Tutorial_Description = 'Frontend_Classic_StartupGuide_Tutorial_Description',
+    Frontend_Classic_StartupGuide_UI_Title = 'Frontend_Classic_StartupGuide_UI_Title',
+    Frontend_Classic_StartupGuide_UI_Description = 'Frontend_Classic_StartupGuide_UI_Description',
+    Frontend_Classic_StartupGuide_Viewer_Horizontal_Title = 'Frontend_Classic_StartupGuide_Viewer_Horizontal_Title',
+    Frontend_Classic_StartupGuide_Viewer_Horizontal_Description = 'Frontend_Classic_StartupGuide_Viewer_Horizontal_Description',
+    Frontend_Classic_StartupGuide_Viewer_Horizontal_SubDescription = 'Frontend_Classic_StartupGuide_Viewer_Horizontal_SubDescription',
+    Frontend_Classic_StartupGuide_Viewer_Title = 'Frontend_Classic_StartupGuide_Viewer_Title',
+    Frontend_Classic_StartupGuide_Viewer_Description = 'Frontend_Classic_StartupGuide_Viewer_Description',
+    Frontend_Classic_StartupGuide_Viewer_Vertical_Title = 'Frontend_Classic_StartupGuide_Viewer_Vertical_Title',
+    Frontend_Classic_StartupGuide_Viewer_Vertical_Description = 'Frontend_Classic_StartupGuide_Viewer_Vertical_Description',
+    Frontend_Classic_StartupGuide_Viewer_Vertical_SubDescription = 'Frontend_Classic_StartupGuide_Viewer_Vertical_SubDescription',
 }
 
 // [SECTION]: Frontend: FluentCore
@@ -189,9 +223,12 @@ export enum FrontendResourceKey {
     Frontend_FluentCore_Menu_ImportBookmarks_Description = 'Frontend_FluentCore_Menu_ImportBookmarks_Description',
     Frontend_FluentCore_Menu_ExportBookmarks_Label = 'Frontend_FluentCore_Menu_ExportBookmarks_Label',
     Frontend_FluentCore_Menu_ExportBookmarks_Description = 'Frontend_FluentCore_Menu_ExportBookmarks_Description',
+    Frontend_FluentCore_Button_ToggleTheme_Description = 'Frontend_FluentCore_Button_ToggleTheme_Description',
 
-    Frontend_FluentCore_Settings_ThemeLuminance_Label = 'Frontend_FluentCore_Settings_ThemeLuminance_Label',
-    Frontend_FluentCore_Settings_ThemeLuminance_Description = 'Frontend_FluentCore_Settings_ThemeLuminance_Description',
+    Frontend_FluentCore_Settings_ThemeMode_Label = 'Frontend_FluentCore_Settings_ThemeMode_Label',
+    Frontend_FluentCore_Settings_ThemeMode_Description = 'Frontend_FluentCore_Settings_ThemeMode_Description',
+    Frontend_FluentCore_Settings_ThemeMode_WebDark = 'Frontend_FluentCore_Settings_ThemeMode_WebDark',
+    Frontend_FluentCore_Settings_ThemeMode_WebLight = 'Frontend_FluentCore_Settings_ThemeMode_WebLight',
     Frontend_FluentCore_Settings_ShowBookmarksPanel_Label = 'Frontend_FluentCore_Settings_ShowBookmarksPanel_Label',
     Frontend_FluentCore_Settings_ShowBookmarksPanel_Description = 'Frontend_FluentCore_Settings_ShowBookmarksPanel_Description',
     Frontend_FluentCore_Settings_ShowDownloadsPanel_Label = 'Frontend_FluentCore_Settings_ShowDownloadsPanel_Label',
@@ -299,6 +336,7 @@ export enum EngineResourceKey {
     FetchProvider_FetchWindow_CloudFlareError = 'FetchProvider_FetchWindow_CloudFlareError',
     FetchProvider_FetchWindow_AlertCaptcha = 'FetchProvider_FetchWindow_AlertCaptcha',
     FetchProvider_Fetch_CloudFlareChallenge = 'FetchProvider_Fetch_CloudFlareChallenge',
+    FetchProvider_Fetch_VercelChallenge = 'FetchProvider_Fetch_VercelChallenge',
     FetchProvider_Fetch_Forbidden = 'FetchProvider_Fetch_Forbidden',
 
     BookmarkPlugin_ConvertToSerializedBookmark_UnsupportedFormatError = 'BookmarkPlugin_ConvertToSerializedBookmark_UnsupportedFormatError',
@@ -335,6 +373,11 @@ export enum WebsiteResourceKey {
 export enum WebsiteResourceKey {
     Plugin_CopyManga_Settings_GlobalCDN = 'Plugin_CopyManga_Settings_GlobalCDN',
     Plugin_CopyManga_Settings_GlobalCDNInfo = 'Plugin_CopyManga_Settings_GlobalCDNInfo',
+}
+
+// [SECTION]: Website CuuTruyen
+export enum WebsiteResourceKey {
+    Plugin_CuuTruyen_Error_NotProcessed = 'Plugin_CuuTruyen_Error_NotProcessed',
 }
 
 // [SECTION]: Website PocketComics

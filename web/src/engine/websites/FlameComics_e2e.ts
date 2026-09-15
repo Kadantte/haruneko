@@ -1,27 +1,23 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'flamecomics',
-        title: 'Flame Comics',
-        timeout: 30000
+        title: 'Flame Comics'
     },
     container: {
-        url: 'https://flamecomics.me/series/solo-necromancy/',
-        id: '/series/solo-necromancy/',
-        title: 'Solo Necromancy'
+        url: 'https://flamecomics.xyz/series/44',
+        id: '44',
+        title: 'Solo Necromancy',
+        timeout: 15_000
     },
     child: {
-        id: '/solo-necromancy-chapter-1/',
-        title: 'Chapter 1'
+        id: '503e0f7071083096',
+        title: 'Chapter 1.00'
     },
     entry: {
-        index: 1,
-        size: 3_653_029,
-        type: 'image/png'
+        index: 2,
+        size: 947_020,
+        type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

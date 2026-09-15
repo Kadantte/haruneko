@@ -1,14 +1,13 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'noromax',
         title: 'Noromax'
     },
     container: {
-        url: 'https://noromax.my.id/Komik/all-hail-the-sect-leader-bahasa-indonesia/',
-        id: '/Komik/all-hail-the-sect-leader-bahasa-indonesia/',
+        url: 'https://noromax02.my.id/manga/all-hail-the-sect-leader-bahasa-indonesia/',
+        id: '/manga/all-hail-the-sect-leader-bahasa-indonesia/',
         title: 'All Hail the Sect Leader'
     },
     child: {
@@ -20,7 +19,4 @@ const config = {
         size: 225_081,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

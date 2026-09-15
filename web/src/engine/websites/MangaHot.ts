@@ -1,4 +1,4 @@
-﻿import { Tags } from '../Tags';
+import { Tags } from '../Tags';
 import icon from './MangaHot.webp';
 import { Chapter, DecoratableMangaScraper, Manga, type MangaPlugin, Page } from '../providers/MangaPlugin';
 import * as Common from './decorators/Common';
@@ -7,23 +7,15 @@ import type { Priority } from '../taskpool/DeferredTask';
 import DeScramble from '../transformers/ImageDescrambler';
 
 type APIResult<T> = {
-    result: null | T
-}
+    result: null | T;
+};
 
 type PageResult = {
-    [id: string]: string
-}
+    [id: string]: string;
+};
 
-function MangaExtractor(element: HTMLAnchorElement) {
-    return {
-        id: new URL(element.href).searchParams.get('work_code'),
-        title: element.querySelector('div.work_name').textContent.trim()
-    };
-
-}
-
-@Common.MangasSinglePageCSS('/ranking', 'div.ranking a.parent', MangaExtractor)
-
+@Common.MangasSinglePageCSS<HTMLAnchorElement>('/ranking/', 'div.ranking a.parent',
+    anchor => ({ id: new URL(anchor.href).searchParams.get('work_code'), title: anchor.querySelector('div.work_name').textContent.trim() }))
 export default class extends DecoratableMangaScraper {
 
     public constructor() {
@@ -49,7 +41,7 @@ export default class extends DecoratableMangaScraper {
         url.search = new URLSearchParams({
             work_code: manga.Identifier,
             mode: 'ajax_stories',
-            _: Date.now().toString()
+            _: `${Date.now()}`
         }).toString();
 
         const { result } = await FetchJSON<APIResult<string>>(new Request(url, {
@@ -61,7 +53,7 @@ export default class extends DecoratableMangaScraper {
         const dom = new DOMParser().parseFromString(result, 'text/html');
         const nodes = [...dom.querySelectorAll<HTMLAnchorElement>('a[id].parent')];
         return nodes.map(node => {
-            const chapterid = new URL(node.href, this.URI).searchParams.get('story_id') ?? node.href.match(/dialog\('(\d+)'\)/)[1];
+            const chapterid = new URL(node.href, this.URI).searchParams.get('story_id') ?? node.href.match(/dialog\('(\d+)'\)/).at(1);
             return new Chapter(this, manga, chapterid, node.querySelector('div.episode_name').textContent.trim());
         });
     }
@@ -80,13 +72,13 @@ export default class extends DecoratableMangaScraper {
             });
 
             const { result } = await FetchJSON<APIResult<string[] | PageResult>>(request); //result can be an array or a json object list
-            if(!result || Object.keys(result).length === 0) {
+            if (!result || Object.keys(result).length === 0) {
                 run = false;
                 continue;
             }
 
             for (const key of Object.keys(result)) { //works with array and object list
-                const page = new Page(this, chapter, new URL(`/app_img${window.atob(result[key])}`, this.URI));
+                const page = new Page(this, chapter, new URL(`/app_img${atob(result[key])}`, this.URI));
                 if (!pageList.find(element => element.Link.href === page.Link.href)) {
                     pageList.push(page);
                 }
@@ -100,6 +92,8 @@ export default class extends DecoratableMangaScraper {
         const scrambletype = this.GetScrambleType(page.Link.href);
         return DeScramble(blob, async (image, ctx) => {
 
+            // TODO: Use more appropriate variable names, or extract the functions when copied directly from website
+
             const CELL_SIZE = 50;
             const iWidth = image.width;
             const iHeight = image.height;
@@ -110,9 +104,6 @@ export default class extends DecoratableMangaScraper {
             let puzzleData = InitPotList();
             puzzleData = scrambletype == 1 ? GetPuzzleColData(GetPuzzleRowData(puzzleData)) : GetPuzzleRowData(GetPuzzleColData(puzzleData));
 
-            //***********************************************/
-            //DRAW
-            //************************************************/
             for (let i = 0; i < puzzleData.length; i++)
                 for (let r = puzzleData[i], e = 0; e < r.length; e++)
                     ctx.drawImage(image, r[e][0], r[e][1], CELL_SIZE, CELL_SIZE, e * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
@@ -183,9 +174,9 @@ export default class extends DecoratableMangaScraper {
         });
     }
 
-    GetScrambleType(href: string): number {
+    private GetScrambleType(href: string): number {
         let t = 0;
-        href = href.split('/').pop();
+        href = href.split('/').at(-1);
         const ptn: RegExp = /^[0-9]$/;
         for (let i = 0; i < href.length; i++) {
             ptn.test(href[i]) && (t += parseInt(href[i]));

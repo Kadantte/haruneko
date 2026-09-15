@@ -22,7 +22,12 @@ export function CreateStorageController(): StorageController {
 }
 
 export function SanitizeFileName(name: string): string {
-    const lookup = {
+
+    /**
+     * Get a replacement for the given {@link char} when it is invalid for files in windows, macos or linux.
+     * Otherwise return the {@link char} itself.
+     */
+    const innvalidFilenameCharactersReplacer = (char: string) => ({
         '<': '＜', // https://unicode-table.com/en/FF1C/
         '>': '＞', // https://unicode-table.com/en/FF1E/
         ':': '꞉', // https://unicode-table.com/en/A789/, https://unicode-table.com/en/FF1A/, https://unicode-table.com/en/FE55/
@@ -33,30 +38,27 @@ export function SanitizeFileName(name: string): string {
         '?': '？', // https://unicode-table.com/en/FF1F/, https://unicode-table.com/en/FE56/
         '*': '＊', // https://unicode-table.com/en/FF0A/
         '~': '～', //https://unicode-explorer.com/c/FF5E //File System API cannot handle trailing hyphens
-    };
+    }[char] ?? char);
 
-    const patternControlCharsUTF8 = /[\u0000-\u001F\u007F-\u009F]/gu; // https://en.wikipedia.org/wiki/C0_and_C1_control_codes
+    /**
+     * Matches all characters from Unicode Category: {@link https://www.compart.com/en/unicode/category/Cc | Control Characters}
+     */
+    const invalidControlCharactersPattern = /[\p{Control}]/gu;
 
-    if (patternControlCharsUTF8.test(name)) {
-        const sequenceCharsUTF8 = name.split('').map(c => c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0'));
-        console.warn(`The filename '${name}' contains one or more invalid control characters which are going to be removed:`, sequenceCharsUTF8, '=>', name.match(patternControlCharsUTF8));
-    }
+    /**
+     * Matches all characters from Unicode Category: {@link https://www.compart.com/en/unicode/category/Cf | Format Characters}
+     */
+    const invalidFormatCharactersPattern = /[\u{FE00}-\u{FE0F}\u{E0001}\u{E0020}-\u{E007F}\p{Format}]/gu;
 
+    // TODO: Reserved names? => CON, PRN, AUX, NUL, COM1, LPT1
     return name
-        .replace(patternControlCharsUTF8, '')
-        .replace(/./g, c => lookup[c] ?? c)
-        .replace(/[\s.]+$/, '')
-        .trim() || 'untitled';
+        .replace(invalidControlCharactersPattern, '')
+        .replace(invalidFormatCharactersPattern, '')
+        .replace(/./g, innvalidFilenameCharactersReplacer)
+        .replace(/\s+$/, '')
+        .trim()
+        .replace(/\.+$/, ({ length }) => '․'.repeat(length)) // Must not end with a `.` dot
+        .replace(/^\.{2,}/, ({ length }) => '․'.repeat(length)) // Must not begin with more than a single `.` dot
+        .trim()
+        || 'untitled';
 }
-
-/*
-// https://fjolt.com/article/javascript-new-file-system-api
-
-const dir = HakuNeko.SettingsManager.OpenScope('*').Get('media-directory').Value;
-console.log(dir.values());
-for(const entry of dir.values())
-
-//const file = await dir.getFileHandle(Date.now().toString(16).toUpperCase() + '.txt', { create: true });
-// file.write(blob);
-// file.close();
-*/

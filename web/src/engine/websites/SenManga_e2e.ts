@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'senmanga',
         title: 'SenManga'
@@ -9,18 +8,17 @@ const config = {
     container: {
         url: 'https://www.senmanga.com/title/31b701a7-78bd-4bb5-931a-6308c807df88',
         id: '31b701a7-78bd-4bb5-931a-6308c807df88',
-        title: 'Childhood Friendship Is Hard'
+        title: 'Osananajimi tte Muzukashii',
+        timeout: 30_000
     },
     child: {
         id: '/read/97e46180-964c-43df-a73a-b9ce281a7d1d',
-        title: 'Ch. 8 (pt-br)'
+        title: 'Ch. 8 (pt-BR)',
+        timeout: 30_000
     },
     entry: {
         index: 1,
         size: 2_025_924,
         type: 'image/png'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

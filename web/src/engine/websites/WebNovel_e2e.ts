@@ -1,7 +1,6 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'webnovel',
         title: 'Webnovel Comics'
@@ -13,14 +12,11 @@ const config: Config = {
     },
     child: {
         id: '40207390380972711',
-        title: '1 : 001 A Second Chance'
+        title: '1 - 001 A Second Chance'
     },
     entry: {
         index: 0,
         size: 408_693,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

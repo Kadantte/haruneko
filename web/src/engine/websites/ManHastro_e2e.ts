@@ -1,26 +1,22 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'manhastro',
         title: 'ManHastro'
     },
     container: {
-        url: 'https://manhastro.com/lermanga/yohan-loves-tite/',
-        id: JSON.stringify({ post: '47401', slug: '/lermanga/yohan-loves-tite/'}),
+        url: 'https://manhastro.net/manga/47401',
+        id: '47401',
         title: 'Yohan Loves Tite'
     },
     child: {
-        id: '/lermanga/yohan-loves-tite/capitulo-9/',
-        title: 'Capitulo 9'
+        id: '461708',
+        title: 'Capitulo 1'
     },
     entry: {
         index: 2,
-        size: 2_176,
-        type: 'image/webp'
+        size: 5_026,
+        type: 'image/avif'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

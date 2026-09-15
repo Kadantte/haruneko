@@ -1,7 +1,6 @@
-import { describe } from 'vitest';
 import { TestFixture } from '../../../test/WebsitesFixture';
 
-const fixture = new TestFixture({
+new TestFixture({
     plugin: {
         id: 'leercapitulo',
         title: 'LeerCapitulo'
@@ -15,11 +14,9 @@ const fixture = new TestFixture({
         id: '/leer/xvziyp/yuan-zun/1055/',
         title: 'Capitulo 1055'
     },
-    /*
     entry: {
         index: 1,
-        size: 573_549, // value switch between 317_943 and 573_549
+        size: 602_693, // value switch between 317_943 and 602_693
         type: 'image/jpeg'
-    }*/
-});
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+    }
+}).AssertWebsite();

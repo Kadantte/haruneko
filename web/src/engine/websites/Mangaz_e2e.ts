@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture( {
     plugin: {
         id: 'mangaz',
         title: 'Manga Library Z (マンガ図書館Z)'
@@ -12,15 +11,12 @@ const config: Config = {
         title: '海底軍艦'
     },
     child: {
-        id: 'https://vw.mangaz.com/virgo/view/220123/i:0',
-        title: '13'
+        id: 'https://vw.mangaz.com/virgo/view/207781/i:0',
+        title: '1'
     },
     entry: {
-        index: 0,
-        size: 525_231,
-        type: 'image/jpeg'
+        index: 7,
+        size: 809_682,
+        type: 'image/png'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

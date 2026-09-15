@@ -1,66 +1,55 @@
 <script lang="ts">
-    import { Loading } from 'carbon-components-svelte';
+
+    import { InlineNotification, Loading } from 'carbon-components-svelte';
     import type { MediaContainer, MediaItem } from '../../../../engine/providers/MediaPlugin';
     import ImageViewer from './ImageViewer.svelte';
     import VideoViewer from './VideoViewer.svelte';
-    import {
-        selectedItem,
-        selectedItemPrevious,
-        selectedItemNext,
-    } from '../../stores/Stores';
+    import { Store as UI } from '../../stores/Stores.svelte';
     import { FlagType } from '../../../../engine/ItemflagManager';
 
-    export let mode: 'Image' | 'Video' = 'Image';
-    export let item: MediaContainer<MediaItem>;
-    let displayedItem: MediaContainer<MediaItem>;;
-    let currentImageIndex: number = -1;
+    interface Props {
+        mode?: 'Image' | 'Video';
+        item: MediaContainer<MediaItem>;
+    }
+    let { mode = 'Image', item }: Props = $props();
 
-    let updating: Promise<void> | undefined;
-    $: refresh(item);
-    async function refresh(item: MediaContainer<MediaItem>) {
-        updating = item.Update();
-        await updating;
-        displayedItem = item;
+    let currentItem: MediaContainer<MediaItem> = $state();
+    let currentImageIndex: number = $state(-1);
+
+    let updating: Promise<MediaContainer<MediaItem>> = $state();
+    $effect(() => {
+        updating = loadItem(item);
+    });
+
+    async function loadItem(item: MediaContainer<MediaItem>) {
+        if(item.Entries.Value.length > 0){
+            return currentItem = item;
+        }
+        else {
+            try {
+                await item.Update();
+                return currentItem = item;
+            } catch (error) {
+                currentItem = undefined;
+                throw error;
+            }
+        }
     }
 
     function onPreviousItem() {
         currentImageIndex = -1;
-        $selectedItem = $selectedItemPrevious;
+        UI.selectedItem = UI.selectedItemPrevious;
     }
     function onNextItem() {
         currentImageIndex = -1;
-        if (wide && !$selectedItemNext) markAsCurrent(item);
-        $selectedItem = $selectedItemNext;
+        if (wide && !UI.selectedItemNext) HakuNeko.ItemflagManager.FlagItem(item, FlagType.Current);
+        UI.selectedItem = UI.selectedItemNext;
     }
     function onClose() {
-        markAsCurrent(item);
+        HakuNeko.ItemflagManager.FlagItem(item, FlagType.Current);
     }
 
-    async function markAsCurrent(itemtoflag: MediaContainer<MediaItem>) {
-        let currentIndex = -1;
-        let itemtoflagIndex = -1;
-        const flags = await HakuNeko.ItemflagManager.GetContainerItemsFlags(
-            itemtoflag.Parent
-        );
-
-        await Promise.all(
-            item.Parent.Entries.Value.map(async (entry, index) => {
-                if (entry.IsSameAs(itemtoflag))
-                    itemtoflagIndex = index;
-                const flag = await HakuNeko.ItemflagManager.GetItemFlagType(
-                    entry
-                );
-                if (flag === FlagType.Current) currentIndex = index;
-            })
-        );
-
-        const isCurrentBookmarkAfter = itemtoflagIndex < currentIndex;
-        HakuNeko.ItemflagManager.FlagItem(
-            itemtoflag,
-            isCurrentBookmarkAfter ? FlagType.Current : FlagType.Viewed
-        );
-    }
-    let wide = false;
+    let wide = $state(false);
 </script>
 
 <div id="Viewer" class="{mode} center" class:wide>
@@ -70,18 +59,22 @@
             <div class="center">... items</div>
         </div>
     {:catch error}
-        <p class="info error">Unable to load item : {error.detail}</p>
+        <InlineNotification
+        title={error.name}
+        subtitle="Unable to load item : {error.message}"
+        class="info error"
+        />
     {/await}
-    {#if displayedItem}
-        {#key displayedItem}
+    {#if currentItem}
+        {#key currentItem}
             {#if mode === 'Image'}
                 <ImageViewer
-                    item={displayedItem}
+                    item={currentItem}
                     {currentImageIndex}
                     bind:wide
-                    on:nextItem={onNextItem}
-                    on:previousItem={onPreviousItem}
-                    on:close={onClose}
+                    {onNextItem}
+                    {onPreviousItem}
+                    {onClose}
                 />
             {:else if mode === 'Video'}
                 <VideoViewer />

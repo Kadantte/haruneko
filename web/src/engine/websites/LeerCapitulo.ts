@@ -10,8 +10,8 @@ const pageScript = `
         resolve(atob(data.replace(
           /[A-Z0-9]/gi,
           (a) =>
-            'gHjXYh8PzLNGEJ4cbCWrkuM7dDZBnKlqxU0AT9OSfaV3o5iw6I2esmF1vQpRty'[
-              'QxtrwfTIpl5cOyDgEH4zbZ3LK0e8GSsNq2AWJVm1ikoRa6C7jUYPFXuv9nBdMh'.indexOf(
+            'EzCIUe3plcrfxuv9hKOsVtkTA6ZjaXRQJ0wWqb5D8gm1nG7LoH2dFyNYB4PiMS'[
+              'xXHbvV7snRpMFkrUPqlS4BzG3jg1aYC5WJ0wcZiLtoAyedQ8D2fTNOI9Eu6mhK'.indexOf(
                 a
               )
             ]
@@ -41,8 +41,7 @@ export default class extends DecoratableMangaScraper {
         const categories = ['completed', 'ongoing', 'paused', 'cancelled'];
         const mangaList: Manga[] = [];
         for (const category of categories) {
-            const path = `/status/${category}/?page={page}`;
-            const mangas = await Common.FetchMangasMultiPageCSS.call(this, provider, path, 'div.media div.media-body a');
+            const mangas = await Common.FetchMangasMultiPageCSS.call(this, provider, 'div.media div.media-body a', Common.PatternLinkGenerator(`/status/${category}/?page={page}`));
             mangaList.push(...mangas);
         }
         return mangaList.distinct();

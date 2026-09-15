@@ -2,44 +2,45 @@ import { Tags } from '../Tags';
 import icon from './NicoNicoSeiga.webp';
 import { Chapter, DecoratableMangaScraper, Manga, type MangaPlugin, Page } from '../providers/MangaPlugin';
 import * as Common from './decorators/Common';
-import { FetchCSS, FetchJSON } from '../platform/FetchProvider';
+import { FetchJSON } from '../platform/FetchProvider';
 import type { Priority } from '../taskpool/DeferredTask';
+import { GetBytesFromHex } from '../BufferEncoder';
+import { DecryptXOR } from '../Crypto';
+import { GetTypedData } from './decorators/Common';
 
-type APIManga = {
-    id: number,
-    title: string
-}
-
-type APIChapters = APIResult<{
-    id: number,
+type APIMedia = {
+    id: number;
     meta: {
-        title: string
-    }
-}[]>;
+        title: string;
+    };
+};
 
 type APIPages = APIResult<{
     meta: {
-        source_url: string,
-        drm_hash: string
-    }
-}[]>
+        source_url: string;
+        drm_hash: string | null;
+    };
+}[]>;
 
 type APIResult<T> = {
     meta: {
-        status: number
-    },
+        status: number;
+    };
     data: {
-        result: T
-    }
-}
+        result: T;
+    };
+};
 
+type PageData = {
+    hash: string;
+};
+
+@Common.MangasMultiPageCSS<HTMLAnchorElement>('div.mg_title div.title a', Common.PatternLinkGenerator('/manga/list?page={page}'), 0, anchor => ({ id: anchor.pathname.split('/').at(-1), title: anchor.text.trim() }))
 export default class extends DecoratableMangaScraper {
-
-    private readonly apiUrl = 'https://api.nicomanga.jp/api/v1/app/manga/';
-    private readonly mangaRegexp = new RegExp(`^${this.URI.origin}/comic/(\\d+)$`);
+    private readonly apiURL = 'https://api.nicomanga.jp/api/v1/app/manga/';
 
     public constructor() {
-        super('niconicoseiga', `ニコニコ静画 (niconico seiga)`, 'https://sp.manga.nicovideo.jp', Tags.Language.Japanese, Tags.Media.Manga, Tags.Source.Official);
+        super('niconicoseiga', `ニコニコ静画 (niconico seiga)`, 'https://manga.nicovideo.jp', Tags.Language.Japanese, Tags.Media.Manga, Tags.Source.Official);
     }
 
     public override get Icon() {
@@ -47,51 +48,30 @@ export default class extends DecoratableMangaScraper {
     }
 
     public override ValidateMangaURL(url: string): boolean {
-        return this.mangaRegexp.test(url);
+        return new RegExpSafe(`^https://(sp.)?manga.nicovideo.jp/comic/\\d+$`).test(url);
     }
 
     public override async FetchManga(provider: MangaPlugin, url: string): Promise<Manga> {
-        const title = (await FetchCSS<HTMLHeadingElement>(new Request(url), 'section.comic_header h2.title')).shift().textContent.trim();
-        return new Manga(this, provider, url.match(this.mangaRegexp)[1], title);
-    }
-
-    public override async FetchMangas(provider: MangaPlugin): Promise<Manga[]> {
-        const mangaList: Manga[] = [];
-        for (let page = 1, run = true; run; page++) {
-            const mangas = await this.GetMangasFromPage(page, provider);
-            mangas.length > 0 ? mangaList.push(...mangas) : run = false;
-        }
-        return mangaList;
-    }
-
-    private async GetMangasFromPage(page: number, provider: MangaPlugin): Promise<Manga[]> {
-        const data = await FetchJSON<APIManga[] | null>(new Request(new URL(`/manga/ajax/ranking?span=hourly&category=all&page=${page}`, this.URI)));
-        return (Array.isArray(data) ? data : []).map(manga => new Manga(this, provider, manga.id.toString(), manga.title.trim()));
+        const { data: { result: { id, meta: { title } } } } = await FetchJSON<APIResult<APIMedia>>(new Request(new URL(`./contents/${url.split('/').at(-1)}`, this.apiURL)));
+        return new Manga(this, provider, `${id}`, title);
     }
 
     public override async FetchChapters(manga: Manga): Promise<Chapter[]> {
-        const { meta, data: { result } } = await FetchJSON<APIChapters>(new Request(new URL(`contents/${manga.Identifier}/episodes`, this.apiUrl)));
-        return meta.status === 200 ? result.map(chapter => new Chapter(this, manga, chapter.id.toString(), chapter.meta.title.trim())) : [];
+        const { meta: { status }, data: { result } } = await FetchJSON<APIResult<APIMedia[]>>(new Request(new URL(`./contents/${manga.Identifier}/episodes`, this.apiURL)));
+        return status === 200 ? result.map(({ id, meta: { title } }) => new Chapter(this, manga, `${id}`, title.replace(manga.Title, '') ?? title)) : [];
     }
 
-    public override async FetchPages(chapter: Chapter): Promise<Page[]> {
-        const { meta, data: { result } } = await FetchJSON<APIPages>(new Request(new URL(`episodes/${chapter.Identifier}/frames`, this.apiUrl)));
-        return meta.status === 200 ? result.map(page => new Page(this, chapter, new URL(page.meta.source_url), { drm_hash: page.meta.drm_hash })) : [];
+    public override async FetchPages(chapter: Chapter): Promise<Page<PageData>[]> {
+        const { meta: { status }, data: { result } } = await FetchJSON<APIPages>(new Request(new URL(`./episodes/${chapter.Identifier}/frames`, this.apiURL)));
+        return status === 200 ? result.map(({ meta: { drm_hash: hash, source_url: url } }) => new Page<PageData>(this, chapter, new URL(url), { hash })) : [];
     }
 
-    public override async FetchImage(page: Page, priority: Priority, signal: AbortSignal): Promise<Blob> {
-        const data = await Common.FetchImageAjax.call(this, page, priority, signal);
-        const encrypted = await data.arrayBuffer();
-        const key = page.Parameters['drm_hash'] as string;
-        const decrypted = this.Decrypt(new Uint8Array(encrypted), key);
-        return Common.GetTypedData(decrypted);
+    public override async FetchImage(page: Page<PageData>, priority: Priority, signal: AbortSignal): Promise<Blob> {
+        const blob = await Common.FetchImageAjax.call(this, page, priority, signal);
+        return !page.Parameters.hash ? blob : this.DecryptImage(blob, page.Parameters.hash);
     }
 
-    private Decrypt(buffer: Uint8Array, key: string): Uint8Array {
-        const xorkey = new Uint8Array(key.slice(0, 16).match(/.{1,2}/g).map(e => parseInt(e, 16)));
-        const result = new Uint8Array(buffer);
-        for (let n = 0; n < buffer.length; n++)
-            result[n] = result[n] ^ xorkey[n % 8];
-        return result;
+    private async DecryptImage(blob: Blob, keyData: string): Promise<Blob> {
+        return GetTypedData(DecryptXOR(new Uint8Array(await blob.arrayBuffer()), GetBytesFromHex(keyData.slice(0, 16))).buffer);
     }
 }

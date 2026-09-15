@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'manga-park',
         title: 'マンガPark (Manga-Park)'
@@ -13,14 +12,11 @@ const config = {
     },
     child: {
         id: '606536',
-        title: '1 - 第1話①'
+        title: '第1話①'
     },
     entry: {
         index: 0,
         size: 194_900,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

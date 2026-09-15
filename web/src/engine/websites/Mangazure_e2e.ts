@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'mangazure',
         title: 'Mangazure'
     },
     container: {
-        url: 'https://www.mangazure.com/2024/01/black-corporation-joseon.html',
-        id: 'black-corporation-joseon',
-        title: 'Black Corporation: Joseon'
+        url: 'https://mangazure.net/manga/serena/',
+        id: JSON.stringify({ post: '252', slug: '/manga/serena/' }),
+        title: 'Serena'
     },
     child: {
-        id: '/2024/01/black-corporation-joseon-bolum-4.html',
-        title: 'BÖLÜM 4'
+        id: '/manga/serena/bolum-107/',
+        title: 'Bölüm 107'
     },
     entry: {
-        index: 1,
-        size: 294_917,
+        index: 0,
+        size: 279_669,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

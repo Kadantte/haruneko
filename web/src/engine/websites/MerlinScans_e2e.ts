@@ -1,26 +1,24 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'merlinscans',
-        title: 'Merlin Scans'
+        title: 'MerlinToon'
     },
     container: {
-        url: 'https://merlinscans.com/manga/kale/',
-        id: JSON.stringify({ post: '1024', slug: '/manga/kale/' }),
-        title: 'Castle'
+        url: 'https://merlintoon.com/seri/akademinin-dehasi/',
+        id: '/seri/akademinin-dehasi/',
+        title: 'Akademinin Dehası',
+        timeout: 15_000
     },
     child: {
-        id: '/manga/kale/bolum-106/',
-        title: 'Bölüm 106'
+        id: '/seri/akademinin-dehasi/bolum-65/',
+        title: 'Bölüm 65',
+        timeout: 15_000
     },
     entry: {
-        index: 0,
-        size: 219_279,
-        type: 'image/jpeg'
+        index: 1,
+        size: 553_600,
+        type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

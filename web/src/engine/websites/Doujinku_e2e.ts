@@ -1,13 +1,12 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'doujinku',
         title: 'Doujinku'
     },
     container: {
-        url: 'https://doujinku.xyz/manga/no-mans-land/',
+        url: 'https://doujinku.org/manga/no-mans-land/',
         id: '/manga/no-mans-land/',
         title: 'No Man’s Land'
     },
@@ -20,7 +19,4 @@ const config = {
         size: 550_637,
         type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

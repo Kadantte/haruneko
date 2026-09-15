@@ -1,27 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'tonizutoon',
         title: 'Tonizu Toon'
-    },
-    /* Login required :/
+    }, /* Need Login
     container: {
-        url: 'https://tonizu.xyz/manga/kullerin-imparatoricesi/',
-        id: JSON.stringify({ post: '2387', slug: '/manga/kullerin-imparatoricesi/' }),
-        title: 'Küllerin İmparatoriçesi'
+        url: 'https://tonizu.top/manga/dana/',
+        id: JSON.stringify({ post: '186', slug: '/manga/dana/' }),
+        title: 'DANA'
     },
     child: {
-        id: '/manga/kullerin-imparatoricesi/bolum-0/',
-        title: 'Bölüm 0'
+        id: '/manga/dana/bolum-1/',
+        title: 'Bölüm 1'
     },
     entry: {
         index: 0,
-        size: 173_580,
+        size: 1_258_937,
         type: 'image/jpeg'
     }*/
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

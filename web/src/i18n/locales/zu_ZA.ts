@@ -76,7 +76,6 @@ const translations: VariantResource = { // NOTE: Use defaults for missing transl
   Frontend_Classic_Sidenav_Settings_General: "crwdns1275:0crwdne1275:0",
   Frontend_Classic_Sidenav_Settings_Interface: "crwdns1277:0crwdne1277:0",
   Frontend_Classic_Sidenav_Settings_Trackers: "crwdns1279:0crwdne1279:0",
-  Frontend_Classic_Sidenav_Settings_Network: "crwdns1281:0crwdne1281:0",
   // [SECTION]: Frontend FluentCore
   Frontend_FluentCore_Label: "crwdns1283:0crwdne1283:0",
   Frontend_FluentCore_Description: "crwdns1285:0crwdne1285:0",
@@ -93,9 +92,12 @@ const translations: VariantResource = { // NOTE: Use defaults for missing transl
   Frontend_FluentCore_Menu_ImportBookmarks_Description: "crwdns1620:0crwdne1620:0",
   Frontend_FluentCore_Menu_ExportBookmarks_Label: "crwdns1622:0crwdne1622:0",
   Frontend_FluentCore_Menu_ExportBookmarks_Description: "crwdns1624:0crwdne1624:0",
+  Frontend_FluentCore_Button_ToggleTheme_Description: "crwdns2190:0{0}crwdne2190:0",
   //
-  Frontend_FluentCore_Settings_ThemeLuminance_Label: "crwdns1305:0crwdne1305:0",
-  Frontend_FluentCore_Settings_ThemeLuminance_Description: "crwdns1307:0crwdne1307:0",
+  Frontend_FluentCore_Settings_ThemeMode_Label: "crwdns2192:0crwdne2192:0",
+  Frontend_FluentCore_Settings_ThemeMode_Description: "crwdns2194:0crwdne2194:0",
+  Frontend_FluentCore_Settings_ThemeMode_WebDark: "crwdns2196:0crwdne2196:0",
+  Frontend_FluentCore_Settings_ThemeMode_WebLight: "crwdns2198:0crwdne2198:0",
   Frontend_FluentCore_Settings_ShowBookmarksPanel_Label: "crwdns1309:0crwdne1309:0",
   Frontend_FluentCore_Settings_ShowBookmarksPanel_Description: "crwdns1570:0crwdne1570:0",
   Frontend_FluentCore_Settings_ShowDownloadsPanel_Label: "crwdns1313:0crwdne1313:0",
@@ -200,6 +202,7 @@ const translations: VariantResource = { // NOTE: Use defaults for missing transl
   FetchProvider_FetchWindow_CloudFlareError: "crwdns1427:0{0}crwdne1427:0",
   FetchProvider_FetchWindow_AlertCaptcha: "crwdns1429:0crwdne1429:0",
   FetchProvider_Fetch_CloudFlareChallenge: "crwdns2164:0{0}crwdne2164:0",
+  FetchProvider_Fetch_VercelChallenge: "crwdns2184:0{0}crwdne2184:0",
   FetchProvider_Fetch_Forbidden: "crwdns2166:0{0}crwdne2166:0",
   //
   BookmarkPlugin_ConvertToSerializedBookmark_UnsupportedFormatError: "crwdns1626:0crwdne1626:0",
@@ -224,6 +227,8 @@ const translations: VariantResource = { // NOTE: Use defaults for missing transl
   Tags_Source_Scanlator: "crwdns1477:0crwdne1477:0",
   Tags_Source_Aggregator: "crwdns1479:0crwdne1479:0",
   Tags_Accessibility: "crwdns1481:0crwdne1481:0",
+  Tags_Accessibility_DomainRotation: "crwdns2180:0crwdne2180:0",
+  Tags_Accessibility_DomainRotationDescription: "crwdns2182:0crwdne2182:0",
   Tags_Accessibility_RegionLock: "crwdns1483:0crwdne1483:0",
   Tags_Accessibility_RegionLockDescription: "crwdns1485:0crwdne1485:0",
   Tags_Accessibility_RateLimit: "crwdns1487:0crwdne1487:0",
@@ -285,6 +290,7 @@ const translations: VariantResource = { // NOTE: Use defaults for missing transl
   // [SECTION]: Plugins (specific)
   Plugin_CopyManga_Settings_GlobalCDN: "crwdns2098:0crwdne2098:0",
   Plugin_CopyManga_Settings_GlobalCDNInfo: "crwdns2100:0crwdne2100:0",
+  Plugin_CuuTruyen_Error_NotProcessed: "crwdns2186:0crwdne2186:0",
   Plugin_PocketComics_LanguageMismatchError: "crwdns2108:0{0}crwdnd2108:0{1}crwdne2108:0",
   Plugin_SheepScanlations_Settings_Username: "crwdns1553:0crwdne1553:0",
   Plugin_SheepScanlations_Settings_UsernameInfo: "crwdns1555:0crwdne1555:0",

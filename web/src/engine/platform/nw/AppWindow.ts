@@ -1,3 +1,4 @@
+import { Observable, type IObservable } from '../../Observable';
 import type { IAppWindow } from '../AppWindow';
 
 export default class implements IAppWindow {
@@ -15,17 +16,9 @@ export default class implements IAppWindow {
 
     constructor(private readonly nwWindow: NWJS_Helpers.win, private readonly splashURL: string) {
         // TODO: Confirm really want to close => nwWindow.on('beforunload', ...)
-        this.RegisterKeyboardShortcuts();
-    }
 
-    private RegisterKeyboardShortcuts() {
-        nw.App.registerGlobalHotKey(new nw.Shortcut({
-            key: 'F11',
-            active: function () {
-                this.nwWindow.toggleFullscreen();
-            },
-            failed: () => { console.log('F11 failed'); }
-        }));
+        // TODO: Provisional fullscreen detection needs to be improved ...
+        setInterval(this.#DetectMaximized.bind(this), 250);
     }
 
     private async InitializeSplash(): Promise<void> {
@@ -58,6 +51,20 @@ export default class implements IAppWindow {
 
     public get HasControls() {
         return true;
+    }
+
+    readonly #maximized = new Observable<boolean, IAppWindow>(false, this);
+    public get Maximized(): IObservable<boolean, IAppWindow> {
+        return this.#maximized;
+    }
+
+    #DetectMaximized() {
+        const screen = window.screen as Screen & { availLeft?: number, availTop?: number };
+        this.#maximized.Value =
+            window.screenX === screen.availLeft
+            && window.screenY === screen.availTop
+            && window.outerWidth === screen.availWidth
+            && window.outerHeight === screen.availHeight;
     }
 
     public Minimize(): void {

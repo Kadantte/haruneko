@@ -1,26 +1,22 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'siimanga',
         title: 'SiiManga'
     },
     container: {
-        url: 'https://siimanga.cyou/manga/overlord-of-insects/',
-        id: JSON.stringify({ post: '367', slug: '/manga/overlord-of-insects/' }),
-        title: 'Overlord of Insects'
+        url: 'https://siikomik.id/komik/tears-on-a-withered-flower/',
+        id: JSON.stringify({ post: '218', slug: '/komik/tears-on-a-withered-flower/' }),
+        title: 'Tears on a Withered Flower'
     },
     child: {
-        id: '/manga/overlord-of-insects/chapter-1/',
-        title: 'Chapter 1'
+        id: '/komik/tears-on-a-withered-flower/chapter-86/',
+        title: 'Chapter 86'
     },
     entry: {
-        index: 1,
-        size: 138_898,
+        index: 0,
+        size: 271_486,
         type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

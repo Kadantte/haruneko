@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'toomtam',
         title: 'ToomTam'
@@ -12,15 +11,12 @@ const config = {
         title: '#Dense #Summer #Firstlove'
     },
     child: {
-        id: '/dense-summer-firstlove-%e0%b8%95%e0%b8%ad%e0%b8%99%e0%b8%97%e0%b8%b5%e0%b9%88-1/',
+        id: encodeURI('/dense-summer-firstlove-ตอนที่-1/').toLowerCase(),
         title: 'ตอนที่ 1'
     },
     entry: {
         index: 0,
         size: 128_953,
-        type: 'image/webp'
+        type: 'image/jpeg'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

@@ -1,13 +1,12 @@
-import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture( {
     plugin: {
         id: 'komikindome',
         title: 'KomikIndoMe'
     },
     container: {
-        url: 'https://komikindo.link/manga/secret-class/',
+        url: 'https://komikindo.fit/manga/secret-class/',
         id: '/manga/secret-class/',
         title: 'Secret Class'
     },
@@ -20,7 +19,4 @@ const config: Config = {
         size: 12_130,
         type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

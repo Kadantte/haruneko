@@ -1,26 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'tarotscans',
         title: 'Tarot Scans'
     },
     container: {
-        url: 'https://www.tarotscans.com/manga/perspective-of-the-all-knowing-reader/',
-        id: '/manga/perspective-of-the-all-knowing-reader/',
-        title: 'Perspective of the All-Knowing Reader'
+        url: 'https://www.tarotscans.com/manga/the-genius-tamer-of-the-academy/',
+        id: JSON.stringify({ post: '36643', slug: '/manga/the-genius-tamer-of-the-academy/'}),
+        title: 'The Genius Tamer of the Academy'
     },
     child: {
-        id: '/perspective-of-the-all-knowing-reader-chapter-180/',
-        title: 'Chapter 180'
+        id: '/manga/the-genius-tamer-of-the-academy/chapter-26/',
+        title: 'Chapter 26'
     },
     entry: {
-        index: 2,
-        size: 362_058,
+        index: 0,
+        size: 336_722,
         type: 'image/webp'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

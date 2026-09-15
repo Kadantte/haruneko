@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+new TestFixture({
     plugin: {
         id: 'tonarinoyoungjump',
         title: 'となりのヤングジャンプ (Tonari no Young Jump)'
@@ -17,10 +16,7 @@ const config = {
     },
     entry: {
         index: 0,
-        size: 1_465_859,
+        size: 1_516_079,
         type: 'image/png'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

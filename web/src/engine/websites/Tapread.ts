@@ -4,6 +4,8 @@ import { Chapter, DecoratableMangaScraper, Manga, Page, type MangaPlugin } from 
 import * as Common from './decorators/Common';
 import { FetchCSS, FetchJSON } from '../platform/FetchProvider';
 
+// TODO: No more manga, only novels
+
 const imgURL = 'https://static.tapread.com';
 
 type APIMangas = {
@@ -48,17 +50,17 @@ export default class extends DecoratableMangaScraper {
     }
 
     public override ValidateMangaURL(url: string): boolean {
-        return new RegExp(`^${this.URI.origin}/comic/detail/`).test(url);
+        return new RegExpSafe(`^${this.URI.origin}/comic/detail/`).test(url);
     }
 
     public override async FetchManga(provider: MangaPlugin, url: string): Promise<Manga> {
-        const id = url.split('/').pop();
+        const id = url.split('/').at(-1);
         const data = await FetchCSS<HTMLDivElement>(new Request(url), 'div.book-container div.book-info div.book-name');
-        return new Manga(this, provider, id, data.pop().textContent.trim());
+        return new Manga(this, provider, id, data.at(-1).textContent.trim());
     }
 
     public override async FetchMangas(provider: MangaPlugin): Promise<Manga[]> {
-        const mangalist = [];
+        const mangalist: Manga[] = [];
         for (let page = 1, run = true; run; page++) {
             const mangas = await this.GetMangasFromPage(page, provider);
             mangas.length > 0 ? mangalist.push(...mangas) : run = false;

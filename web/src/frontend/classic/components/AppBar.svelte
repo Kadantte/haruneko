@@ -6,29 +6,25 @@
         HeaderGlobalAction,
         SkipToContent,
     } from 'carbon-components-svelte';
-    import {
-        Bookmark,
-        Checkbox,
-        Close,
-        Copy,
-        Home,
-        Subtract,
-    } from 'carbon-icons-svelte';
+    import Bookmark from 'carbon-icons-svelte/lib/Bookmark.svelte';
+    import Checkbox from 'carbon-icons-svelte/lib/Checkbox.svelte';
+    import Close from 'carbon-icons-svelte/lib/Close.svelte';
+    import Copy from 'carbon-icons-svelte/lib/Copy.svelte';
+    import Home from 'carbon-icons-svelte/lib/Home.svelte';
+    import Subtract from 'carbon-icons-svelte/lib/Subtract.svelte';
     import Sidenav from './Sidenav.svelte';
 
-    import {
-        selectedPlugin,
-        selectedMedia,
-        selectedItem,
-        WindowController,
-    } from '../stores/Stores';
-    import { Locale, SidenavIconsOnTop } from '../stores/Settings';
-    import { createEventDispatcher } from 'svelte';
-    const dispatch = createEventDispatcher();
+    import  {Store as UI } from '../stores/Stores.svelte';
+    import { GlobalSettings, Settings } from '../stores/Settings.svelte';
 
-    let isSideNavOpen: boolean = false;
+    interface Props {
+        onHome?: () => void;
+    };
+    let { onHome }: Props  = $props();
 
-    let winMaximized = false;
+    let isSideNavOpen: boolean = $state(false);
+
+    let winMaximized = $state(false);
 
     function updateWindowState() {
         winMaximized =
@@ -41,37 +37,29 @@
 
     window.addEventListener('resize', updateWindowState);
 
-    let showWindowControls = false;
-    let minimize: () => void;
-    let maximize: () => void;
-    let restore: () => void;
-    let close: () => void;
+    let minimize = $derived(UI.WindowController?.Minimize.bind(UI.WindowController));
+    let maximize = $derived(UI.WindowController?.Maximize.bind(UI.WindowController));
+    let restore = $derived(UI.WindowController?.Restore.bind(UI.WindowController));
+    let close = $derived(UI.WindowController?.Close.bind(UI.WindowController));
 
-    $: if ($WindowController) {
-        showWindowControls = $WindowController.HasControls;
-        minimize = $WindowController.Minimize.bind($WindowController);
-        maximize = $WindowController.Maximize.bind($WindowController);
-        restore = $WindowController.Restore.bind($WindowController);
-        close = $WindowController.Close.bind($WindowController);
-    }
 </script>
 
 <Header
     id="Header"
     expandedByDefault={false}
-    persistentHamburgerMenu={true}
+    persistentHamburgerMenu
     bind:isSideNavOpen
 >
     <div slot="platform">
-        {#if $SidenavIconsOnTop}
+        {#if Settings.SidenavIconsOnTop.Value}
             <Button
                 class="clickable"
                 icon={Home}
-                iconDescription={$Locale.Frontend_Classic_Sidenav_Home()}
+                iconDescription={GlobalSettings.Locale.Frontend_Classic_Sidenav_Home()}
                 kind="ghost"
                 tooltipPosition="bottom"
                 tooltipAlignment="center"
-                on:click={() => dispatch('home')}
+                on:click={onHome}
             />
             <Button
                 class="clickable"
@@ -81,16 +69,16 @@
                 tooltipPosition="bottom"
                 tooltipAlignment="center"
                 on:click={() => {
-                    $selectedPlugin = window.HakuNeko.BookmarkPlugin;
-                    $selectedMedia = undefined;
-                    $selectedItem = undefined;
+                    UI.selectedPlugin = window.HakuNeko.BookmarkPlugin;
+                    UI.selectedMedia = undefined;
+                    UI.selectedItem = undefined;
                 }}
             />
         {/if}
-        <div id="AppTitle" class:padding-left={$SidenavIconsOnTop}>
-            {$Locale.Frontend_Product_Title()}
-            <span class="appdesc">{$Locale.Frontend_Product_Description()}</span
-            >
+        <div id="AppTitle" class:padding-left={Settings.SidenavIconsOnTop.Value}>
+            {GlobalSettings.Locale.Frontend_Product_Title()}
+            <span class="appdesc">{GlobalSettings.Locale.Frontend_Product_Description()}</span>
+            <span class="beta">(v10.0 beta "HaruNeko")</span>
         </div>
     </div>
 
@@ -98,7 +86,7 @@
         <SkipToContent />
     </div>
     <HeaderUtilities>
-        {#if showWindowControls}
+        {#if UI.WindowController?.HasControls}
             <HeaderGlobalAction
                 on:click={minimize}
                 iconDescription="Minimize"
@@ -119,12 +107,9 @@
     </HeaderUtilities>
 </Header>
 
-<Sidenav bind:isOpen={isSideNavOpen} on:home />
+<Sidenav bind:isOpen={isSideNavOpen} {onHome} />
 
 <style>
-    :global(#Header) {
-        padding-left: 0;
-    }
     div[slot='platform'] :global(.clickable) {
         -webkit-app-region: no-drag;
     }
@@ -132,11 +117,22 @@
         padding-right: 0.2em;
         padding-left: 0.2em;
     }
+    #AppTitle {
+        -webkit-app-region: drag;
+    }
     #AppTitle:global(.padding-left) {
         padding-left: 1em;
     }
     #AppTitle .appdesc {
         font-weight: var(--cds-body-short-01-font-weight, 400);
+        padding-left: 1em;
+    }
+    #AppTitle .beta {
+        font-size: var(--cds-caption-01-font-size, .75rem);
+        font-weight: var(--cds-caption-01-font-weight, 400);
+        line-height: var(--cds-caption-01-line-height, 1.33333);
+        letter-spacing: var(--cds-caption-01-letter-spacing, .32px);
+        color: var(--cds-text-helper);
         padding-left: 1em;
     }
     div[slot='platform'] {

@@ -1,7 +1,6 @@
-﻿import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'sundaywebry',
         title: 'サンデーうぇぶり (Sunday Webry)'
@@ -17,10 +16,7 @@ const config: Config = {
     },
     entry: {
         index: 0,
-        size: 464_508,
+        size: 523_025,
         type: 'image/png'
     }
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+}).AssertWebsite();

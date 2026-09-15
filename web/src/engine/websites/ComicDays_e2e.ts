@@ -1,7 +1,7 @@
-﻿import { describe } from 'vitest';
-import { TestFixture } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config = {
+// Case : episodes
+new TestFixture({
     plugin: {
         id: 'comicdays',
         title: 'コミックDAYS (Comic Days)'
@@ -17,10 +17,51 @@ const config = {
     },
     entry: {
         index: 0,
-        size: 2_259_808,
+        size: 2_348_897,
         type: 'image/png'
     }
-};
+}).AssertWebsite();
 
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+// Case : volumes
+new TestFixture({
+    plugin: {
+        id: 'comicdays',
+        title: 'コミックDAYS (Comic Days)'
+    },
+    container: {
+        url: 'https://comic-days.com/volume/2550689798642753315',
+        id: '/volume/2550689798642753315',
+        title: 'ＪＪＭ 女子柔道部物語 社会人編',
+    }, /* Paid content
+    child: {
+        id: '/volume/2550689798642753315',
+        title: '（１)'
+    },
+    entry: {
+        index: 0,
+        size: -1,
+        type: 'image/png'
+    }*/
+}).AssertWebsite();
+
+// Case : magazines
+new TestFixture({
+    plugin: {
+        id: 'comicdays',
+        title: 'コミックDAYS (Comic Days)'
+    },
+    container: {
+        url: 'https://comic-days.com/magazine/3269754496454823816',
+        id: '/magazine/3269754496454823816',
+        title: 'アフタヌーン',
+    }, /* Paid content
+    child: {
+        id: '/magazine/3269754496454823816',
+        title: '２０２２年２月号'
+    }, /* Paid content
+    entry: {
+        index: 0,
+        size: -1,
+        type: 'image/png'
+    }*/
+}).AssertWebsite();

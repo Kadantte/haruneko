@@ -3,25 +3,27 @@ import { AppURL } from './PuppeteerGlobal';
 
 export class PuppeteerFixture {
 
-    #browser: puppeteer.Browser;
-    #page: puppeteer.Page;
+    static #browser = puppeteer.connect({ browserWSEndpoint: process.env.browserWS, defaultViewport: null });
+    static #page = this.#browser.then(browser => browser.pages()).then(async pages => {
+        const page = pages.find(page => page.url() === AppURL);
+        await page!.setCacheEnabled(false);
+        return page;
+    });
 
-    constructor() {}
-
-    protected get Browser() {
-        return this.#browser;
+    public async GetPage() {
+        const page = await PuppeteerFixture.#page;
+        await page.bringToFront();
+        return page;
     }
 
-    protected get Page() {
-        return this.#page;
+    public async Screenshot(page: puppeteer.Page) {
+        await page.screenshot({
+            type: 'png',
+            fullPage: true,
+            captureBeyondViewport: true,
+            path: `./screenshot_${Date.now().toString(36)}.png`,
+        });
     }
 
-    public async Connect<T extends this>(): Promise<T> {
-        this.#browser = await puppeteer.connect({ browserWSEndpoint: process.env.browserWS });
-        const pages = await this.#browser.pages();
-        this.#page = pages.find(page => page.url() === AppURL);
-        await this.#page.reload();
-        await this.#page.waitForSelector('body div#app main#hakunekoapp', { timeout: 7500 });
-        return this as T;
-    }
+    protected EvaluateHandle: typeof puppeteer.Page.prototype.evaluateHandle = async (pageFunction, ...args) => (await PuppeteerFixture.#page)!.evaluateHandle(pageFunction, ...args);
 }

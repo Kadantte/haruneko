@@ -1,27 +1,22 @@
-﻿import { describe } from 'vitest';
-import { TestFixture, type Config } from '../../../test/WebsitesFixture';
+﻿import { TestFixture } from '../../../test/WebsitesFixture';
 
-const config: Config = {
+new TestFixture({
     plugin: {
         id: 'shinigamiid',
         title: 'Shinigami ID',
     },
-    /* Cloudflare
     container: {
-        url: 'https://shinigami02.com/series/sss-class-suicide-hunter/',
-        id: JSON.stringify({ post: '641', slug: '/series/sss-class-suicide-hunter/' }),
+        url: 'https://11.shinigami.asia/series/73a836fe-373e-4645-a5d9-a517922be4d3',
+        id: '73a836fe-373e-4645-a5d9-a517922be4d3',
         title: 'SSS-Class Suicide Hunter'
     },
     child: {
-        id: '/series/sss-class-suicide-hunter/chapter-01/',
-        title: 'Chapter 01'
+        id: 'd676ac4e-8f4a-4699-9e53-ea2de268c990',
+        title: 'Chapter 1'
     },
     entry: {
         index: 1,
-        size: 894_830,
+        size: 644_205,
         type: 'image/jpeg'
-    }*/
-};
-
-const fixture = new TestFixture(config);
-describe(fixture.Name, async () => (await fixture.Connect()).AssertWebsite());
+    }
+}).AssertWebsite();
